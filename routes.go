@@ -20,7 +20,6 @@ func someHandler() gin.HandlerFunc {
 	return gin.HandlerFunc(fn)
 }
 
-// Routes gin routes
 func routes(router *gin.Engine) {
 	root := router.Group("/")
 	{
