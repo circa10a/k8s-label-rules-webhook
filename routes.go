@@ -41,6 +41,5 @@ func routes(router *gin.Engine) {
 	{
 		root.POST("/", labelValidationHandler())
 		root.POST("/reload", reloadRulesHandler())
-
 	}
 }
