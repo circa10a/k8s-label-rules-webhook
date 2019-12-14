@@ -1,0 +1,11 @@
+rules:
+  - name: require-phone-number
+    key: phone-number
+    value:
+      type: string
+      regex: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+  - name: require-email
+    key: email-address
+    value:
+      type: string
+      regex: /.*@.*\..*/
