@@ -8,4 +8,4 @@ rules:
     key: email-address
     value:
       type: string
-      regex: /.*@.*\..*/
+      regex: /.*@.*..*/

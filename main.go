@@ -2,16 +2,38 @@ package main
 
 import (
 	"flag"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
+var (
+	// FilePath String pointer of path to rules yaml file
+	FilePath *string
+	// R main rules struct to hold data
+	R rules
+	// G default gin engine
+	G = gin.Default()
+)
+
 func flags() {
-	filePath := flag.String("file", "", "Path to yaml file with ruleset")
+	// --file arg
+	FilePath = flag.String("file", os.Getenv("FILE"), "Path to yaml file with ruleset")
+	// --metrics arg
+	metrics := flag.Bool("metrics", str2bool(os.Getenv("METRICS")), "Enable prometheus endpoint at /metrics")
 	flag.Parse()
-	if *filePath == "" {
+	// Input file validation
+	if *FilePath == "" {
+		flag.PrintDefaults()
 		log.Fatal("No file provided")
+	}
+	// Metrics flag validation
+	if *metrics {
+		// Create prometheus registry named "gin"
+		p := NewPrometheusRegistry("gin")
+		// Pass gin to inject prometheus middleware
+		p.Use(G)
 	}
 }
 
@@ -19,18 +41,9 @@ func main() {
 	// Validate command line arguments
 	flags()
 	// Test rules
-	rules := getRules(*filePath)
-	log.Info(rules[0])
-	// match, _ := regexp.MatchString(rules[0].Value.Regex, "318-305-6964")
-	// fmt.Println(match)
-	// Initialize gin engine
-	r := gin.Default()
-	// Create prometheus registry named "gin"
-	p := NewPrometheusRegistry("gin")
-	// Pass gin to inject prometheus middleware
-	p.Use(r)
+	R.load(*FilePath)
 	// Initialize paths and handlers in routes.go
-	routes(r)
+	routes(G)
 	// Start web server on 8080
-	r.Run(":8080")
+	G.Run(":8080")
 }
