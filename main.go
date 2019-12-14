@@ -11,7 +11,7 @@ import (
 var (
 	// FilePath String pointer of path to rules yaml file
 	FilePath *string
-	// R main rules struct to hold data
+	// R main rules struct to hold current ruleset
 	R rules
 	// G default gin engine
 	G = gin.Default()

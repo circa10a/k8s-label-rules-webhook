@@ -15,7 +15,6 @@ func labelValidationHandler() gin.HandlerFunc {
 
 		c.String(200, "Success")
 	}
-
 	return gin.HandlerFunc(fn)
 }
 
