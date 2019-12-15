@@ -1,6 +1,9 @@
 package main
 
 import (
+	"errors"
+	"fmt"
+
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -29,4 +32,18 @@ func (r *rules) load(path string) error {
 		log.Error(err)
 	}
 	return err
+}
+
+func ensureLabelsContainRules(labels map[string]interface{}) error {
+	for _, rule := range R.Rules {
+		// Ensure labels contains rule
+		if _, ok := labels[rule.Key]; ok {
+			// If rule is found, match regex
+		} else {
+			// If rule is not found, reject
+			errStr := fmt.Sprintf("%v not in labels", rule.Key)
+			return errors.New(errStr)
+		}
+	}
+	return nil
 }

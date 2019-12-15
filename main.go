@@ -42,6 +42,8 @@ func main() {
 	flags()
 	// Test rules
 	R.load(*FilePath)
+	// Validate ruleset regex
+	validateAllRulesRegex(R)
 	// Initialize paths and handlers in routes.go
 	routes(G)
 	// Start web server on 8080
