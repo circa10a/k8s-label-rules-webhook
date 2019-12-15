@@ -2,7 +2,9 @@ package main
 
 // Structure of POST request from k8s admission webhook resource
 type k8sRequest struct {
-	Request struct {
+	ApiVersion string
+	Kind       string
+	Request    struct {
 		Object struct {
 			Metadata struct {
 				UID    string

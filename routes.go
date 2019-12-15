@@ -2,15 +2,16 @@ package main
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Generate response to return to k8s
-func sendResponse(c *gin.Context, code int, uid string, allowed bool, message string) {
+func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bool, code int, message string) {
 	r := &webhookResponse{
-		APIVersion: "admission.k8s.io/v1beta1",
-		Kind:       "AdmissionsReview",
+		APIVersion: k8sRequest.ApiVersion,
+		Kind:       k8sRequest.Kind,
 		Response: response{
 			UID:     uid,
 			Allowed: allowed,
@@ -29,36 +30,54 @@ func labelValidationHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		k8sData := &k8sRequest{}
 		// If no error Binding
-		if c.ShouldBindJSON(&k8sData) == nil {
+		if c.BindJSON(&k8sData) == nil {
 			labels := k8sData.Request.Object.Metadata.Labels
 			uid := k8sData.Request.Object.Metadata.UID
-			// Loop current ruleset
-			err := ensureLabelsContainRules(labels)
-			if err != nil {
-				sendResponse(c, http.StatusBadRequest, uid, false, err.Error())
+			// First check ruleset
+			rulesErr := validateAllRulesRegex(R)
+			if len(rulesErr) > 0 {
+				sendResponse(c, k8sData, uid, false, http.StatusInternalServerError, strings.Join(rulesErr[:], ","))
+				return
 			}
-			//c.String(200, "Success")
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"err": "Improperly formatted request sent",
-			})
+			// Ensure labels provided contain keys identified in the ruleset
+			containLabelErr := ensureLabelsContainRules(labels)
+			// Reject request if not
+			if containLabelErr != nil {
+				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, containLabelErr.Error())
+				return
+			}
+			// Ensure labels provided match regex of keys identified in the ruleset
+			matchLabelErr := ensureLabelsMatchRules(labels)
+			// Reject request if not
+			if matchLabelErr != nil {
+				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, matchLabelErr.Error())
+				return
+			}
+			sendResponse(c, k8sData, uid, true, http.StatusOK, "Labels conform to ruleset")
+			return
 		}
+		// In the event, nothing to bind to
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": "Improperly formatted request sent",
+		})
+		return
 	}
 	return gin.HandlerFunc(fn)
 }
 
 // /reload context
+// Hot reload file back into memory via pointer
 func reloadRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		// Load file back into mem
 		err := R.load(*FilePath)
 		if err != nil {
-			c.PureJSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusBadRequest, gin.H{
 				"reloaded": false,
 				"err":      err.Error(),
 			})
 		} else {
-			c.PureJSON(http.StatusOK, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"reloaded":   true,
 				"newRuleSet": &R,
 			})
@@ -68,24 +87,26 @@ func reloadRulesHandler() gin.HandlerFunc {
 }
 
 // /rules context
+// Send current ruleset
 func getRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
-		c.PureJSON(http.StatusOK, &R)
+		c.JSON(http.StatusOK, &R)
 	}
 	return gin.HandlerFunc(fn)
 }
 
 // /validate context
+// Send whether ruleset regex is valid or not
 func validateRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		err := validateAllRulesRegex(R)
 		if len(err) > 0 {
-			c.PureJSON(http.StatusOK, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"rulesValid": false,
 				"err":        err,
 			})
 		} else {
-			c.PureJSON(http.StatusOK, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"rulesValid": true,
 			})
 		}

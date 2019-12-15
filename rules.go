@@ -26,9 +26,13 @@ type value struct {
 	Regex string `yaml:"regex" json:"regex"`
 }
 
-func validRuleRegex(r rule) bool {
+func validRuleRegex(r rule) error {
 	_, err := regexp.Compile(r.Value.Regex)
-	return err != nil
+	if err != nil {
+		errStr := fmt.Sprintf("Rule: %v contains invalid regex", r.Name)
+		return errors.New(errStr)
+	}
+	return nil
 }
 
 func validateAllRulesRegex(r rules) []string {
@@ -70,5 +74,12 @@ func ensureLabelsContainRules(labels map[string]interface{}) error {
 			return errors.New(errStr)
 		}
 	}
+	return nil
+}
+
+func ensureLabelsMatchRules(labels map[string]interface{}) error {
+
+	// Test label values against rules
+
 	return nil
 }
