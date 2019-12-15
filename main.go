@@ -44,6 +44,8 @@ func main() {
 	R.load(*FilePath)
 	// Initialize paths and handlers in routes.go
 	routes(G)
-	// Start web server on 8080
-	G.Run(":8080")
+	// Start web server
+	// Defaults to port 8080, can be overridden via PORT env var.
+	// Example: export PORT=3000
+	G.Run()
 }

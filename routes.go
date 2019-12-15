@@ -9,7 +9,7 @@ import (
 // Generate response to return to k8s
 func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bool, code int, message string) {
 	r := &webhookResponse{
-		APIVersion: k8sRequest.ApiVersion,
+		APIVersion: k8sRequest.APIVersion,
 		Kind:       k8sRequest.Kind,
 		Response: response{
 			UID:     uid,
