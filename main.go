@@ -40,10 +40,8 @@ func flags() {
 func main() {
 	// Validate command line arguments
 	flags()
-	// Test rules
+	// Load initial rules into memory
 	R.load(*FilePath)
-	// Validate ruleset regex
-	validateAllRulesRegex(R)
 	// Initialize paths and handlers in routes.go
 	routes(G)
 	// Start web server on 8080

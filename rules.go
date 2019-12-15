@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"regexp"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -25,12 +26,36 @@ type value struct {
 	Regex string `yaml:"regex" json:"regex"`
 }
 
+func validRuleRegex(r rule) bool {
+	_, err := regexp.Compile(r.Value.Regex)
+	return err != nil
+}
+
+func validateAllRulesRegex(r rules) []string {
+	// To send back every rule that has invalid regex
+	// Instead of just one at a time
+	var errArr []string
+	for _, rule := range r.Rules {
+		_, err := regexp.Compile(rule.Value.Regex)
+		if err != nil {
+			errStr := fmt.Sprintf("Rule: %v contains invalid regex", rule.Name)
+			log.Errorf(errStr)
+			errArr = append(errArr, errStr)
+		}
+	}
+	if len(errArr) > 0 {
+		return errArr
+	}
+	return nil
+}
+
 func (r *rules) load(path string) error {
 	rulesData := readFile(path)
 	err := yaml.Unmarshal([]byte(rulesData), &r)
 	if err != nil {
 		log.Error(err)
 	}
+	validateAllRulesRegex(*r)
 	return err
 }
 
