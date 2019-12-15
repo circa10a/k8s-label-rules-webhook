@@ -19,8 +19,7 @@ type rule struct {
 
 // Value struct within each rule
 type value struct {
-	DataType string `yaml:"type" json:"type"`
-	Regex    string `yaml:"regex" json:"regex"`
+	Regex string `yaml:"regex" json:"regex"`
 }
 
 func (r *rules) load(path string) error {
