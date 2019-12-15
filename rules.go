@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -26,30 +27,18 @@ type value struct {
 	Regex string `yaml:"regex" json:"regex"`
 }
 
-func validRuleRegex(r rule) error {
-	_, err := regexp.Compile(r.Value.Regex)
-	if err != nil {
-		errStr := fmt.Sprintf("Rule: %v contains invalid regex", r.Name)
-		return errors.New(errStr)
-	}
-	return nil
+type ruleError struct {
+	RuleName string `json:"rulename"`
+	Err      string `json:"err"`
 }
 
-func validateAllRulesRegex(r rules) []string {
-	// To send back every rule that has invalid regex
-	// Instead of just one at a time
-	var errArr []string
-	for _, rule := range r.Rules {
-		err := validRuleRegex(rule)
-		if err != nil {
-			log.Errorf(err.Error())
-			errArr = append(errArr, err.Error())
-		}
+func errsToString(r []ruleError) string {
+	var s []string
+	for _, v := range r {
+		errStr := fmt.Sprintf("rule: %v, err: %v", v.RuleName, v.Err)
+		s = append(s, errStr)
 	}
-	if len(errArr) > 0 {
-		return errArr
-	}
-	return nil
+	return strings.Join(s, " ")
 }
 
 func (r *rules) load(path string) error {
@@ -58,12 +47,29 @@ func (r *rules) load(path string) error {
 	if err != nil {
 		log.Error(err)
 	}
-	validateAllRulesRegex(*r)
+	r.validateAllRulesRegex()
 	return err
 }
 
-func ensureLabelsContainRules(labels map[string]interface{}) error {
-	for _, rule := range R.Rules {
+func (r *rules) validateAllRulesRegex() []ruleError {
+	// To send back every rule that has invalid regex
+	// Instead of just one at a time
+	var errArr []ruleError
+	for _, rule := range r.Rules {
+		_, err := regexp.Compile(rule.Value.Regex)
+		if err != nil {
+			log.Errorf("rule: %v, err: %v", rule.Name, err.Error())
+			errArr = append(errArr, ruleError{RuleName: rule.Name, Err: err.Error()})
+		}
+	}
+	if len(errArr) > 0 {
+		return errArr
+	}
+	return nil
+}
+
+func (r *rules) ensureLabelsContainRules(labels map[string]interface{}) error {
+	for _, rule := range r.Rules {
 		// Ensure labels contains rule
 		if _, ok := labels[rule.Key]; ok {
 			// If rule is found, match regex
@@ -76,7 +82,7 @@ func ensureLabelsContainRules(labels map[string]interface{}) error {
 	return nil
 }
 
-func ensureLabelsMatchRules(labels map[string]interface{}) error {
+func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 
 	// Test label values against rules
 

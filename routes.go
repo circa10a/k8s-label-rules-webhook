@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,20 +33,20 @@ func labelValidationHandler() gin.HandlerFunc {
 			labels := k8sData.Request.Object.Metadata.Labels
 			uid := k8sData.Request.Object.Metadata.UID
 			// First check ruleset is valid
-			rulesErr := validateAllRulesRegex(R)
-			if len(rulesErr) > 0 {
-				sendResponse(c, k8sData, uid, false, http.StatusInternalServerError, strings.Join(rulesErr[:], ","))
+			rulesErrs := R.validateAllRulesRegex()
+			if len(rulesErrs) > 0 {
+				sendResponse(c, k8sData, uid, false, http.StatusInternalServerError, errsToString(rulesErrs))
 				return
 			}
 			// Ensure labels provided contain keys identified in the ruleset
-			containLabelErr := ensureLabelsContainRules(labels)
+			containLabelErr := R.ensureLabelsContainRules(labels)
 			// Reject request if not
 			if containLabelErr != nil {
 				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, containLabelErr.Error())
 				return
 			}
 			// Ensure labels provided match regex of keys identified in the ruleset
-			matchLabelErr := ensureLabelsMatchRules(labels)
+			matchLabelErr := R.ensureLabelsMatchRules(labels)
 			// Reject request if not
 			if matchLabelErr != nil {
 				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, matchLabelErr.Error())
@@ -100,11 +99,11 @@ func getRulesHandler() gin.HandlerFunc {
 // Send whether ruleset regex is valid or not
 func validateRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
-		err := validateAllRulesRegex(R)
+		err := R.validateAllRulesRegex()
 		if len(err) > 0 {
 			c.JSON(http.StatusOK, gin.H{
 				"rulesValid": false,
-				"err":        err,
+				"errors":     err,
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
