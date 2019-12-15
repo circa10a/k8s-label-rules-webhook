@@ -40,11 +40,10 @@ func validateAllRulesRegex(r rules) []string {
 	// Instead of just one at a time
 	var errArr []string
 	for _, rule := range r.Rules {
-		_, err := regexp.Compile(rule.Value.Regex)
+		err := validRuleRegex(rule)
 		if err != nil {
-			errStr := fmt.Sprintf("Rule: %v contains invalid regex", rule.Name)
-			log.Errorf(errStr)
-			errArr = append(errArr, errStr)
+			log.Errorf(err.Error())
+			errArr = append(errArr, err.Error())
 		}
 	}
 	if len(errArr) > 0 {

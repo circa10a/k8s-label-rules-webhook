@@ -29,11 +29,11 @@ func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bo
 func labelValidationHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		k8sData := &k8sRequest{}
-		// If no error Binding
+		// If no binding err
 		if c.BindJSON(&k8sData) == nil {
 			labels := k8sData.Request.Object.Metadata.Labels
 			uid := k8sData.Request.Object.Metadata.UID
-			// First check ruleset
+			// First check ruleset is valid
 			rulesErr := validateAllRulesRegex(R)
 			if len(rulesErr) > 0 {
 				sendResponse(c, k8sData, uid, false, http.StatusInternalServerError, strings.Join(rulesErr[:], ","))
@@ -53,6 +53,7 @@ func labelValidationHandler() gin.HandlerFunc {
 				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, matchLabelErr.Error())
 				return
 			}
+			// All constraints passed
 			sendResponse(c, k8sData, uid, true, http.StatusOK, "Labels conform to ruleset")
 			return
 		}
