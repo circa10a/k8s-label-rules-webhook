@@ -60,7 +60,6 @@ func labelValidationHandler() gin.HandlerFunc {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"err": "Improperly formatted request sent",
 		})
-		return
 	}
 	return gin.HandlerFunc(fn)
 }
