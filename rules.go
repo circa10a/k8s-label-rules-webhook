@@ -85,7 +85,7 @@ func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 	for _, rule := range r.Rules {
 		// Force all values to strings to prevent panic from interface conversion
 		labelVal := fmt.Sprintf("%v", labels[rule.Key])
-		match, _ := regexp.MatchString(string(rule.Value.Regex), labelVal)
+		match, _ := regexp.MatchString(rule.Value.Regex, labelVal)
 		if !match {
 			errStr := fmt.Sprintf("Value for label '%v' does not match expression '%v'", rule.Key, rule.Value.Regex)
 			return errors.New(errStr)
