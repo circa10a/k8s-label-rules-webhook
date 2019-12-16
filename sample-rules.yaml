@@ -9,3 +9,7 @@ rules:
     value:
       #regex: "[]"
       regex: ^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$
+  - name: require-num
+    key: num
+    value:
+      regex: "[9]{1}"

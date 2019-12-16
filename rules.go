@@ -48,6 +48,7 @@ func (r *rules) load(path string) error {
 		log.Error(err)
 	}
 	r.validateAllRulesRegex()
+	// Should return nil
 	return err
 }
 
