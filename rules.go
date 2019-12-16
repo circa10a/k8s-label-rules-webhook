@@ -71,9 +71,7 @@ func (r *rules) validateAllRulesRegex() []ruleError {
 func (r *rules) ensureLabelsContainRules(labels map[string]interface{}) error {
 	for _, rule := range r.Rules {
 		// Ensure labels contains rule
-		if _, ok := labels[rule.Key]; ok {
-			// If rule is found, match regex
-		} else {
+		if _, ok := labels[rule.Key]; !ok {
 			// If rule is not found, reject
 			errStr := fmt.Sprintf("%v not in labels", rule.Key)
 			return errors.New(errStr)
@@ -83,8 +81,14 @@ func (r *rules) ensureLabelsContainRules(labels map[string]interface{}) error {
 }
 
 func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
-
-	// Test label values against rules
-
+	for _, rule := range r.Rules {
+		// Force all values to strings to prevent panic from interface conversion
+		labelVal := fmt.Sprintf("%v", labels[rule.Key])
+		match, _ := regexp.MatchString(string(rule.Value.Regex), labelVal)
+		if !match {
+			errStr := fmt.Sprintf("Value for label '%v' does not match expression '%v'", rule.Key, rule.Value.Regex)
+			return errors.New(errStr)
+		}
+	}
 	return nil
 }
