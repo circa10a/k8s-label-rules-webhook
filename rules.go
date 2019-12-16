@@ -12,7 +12,8 @@ import (
 
 // Rules array from yaml
 type rules struct {
-	Rules []rule `yaml:"rules" json:"rules"`
+	Rules          []rule `yaml:"rules" json:"rules"`
+	CompiledRegexs map[string]*regexp.Regexp
 }
 
 // Individual rule within rules array
@@ -47,26 +48,34 @@ func (r *rules) load(path string) error {
 	if err != nil {
 		log.Error(err)
 	}
-	r.validateAllRulesRegex()
+	r.compileRegex(true)
 	// Should return nil
 	return err
 }
 
-func (r *rules) validateAllRulesRegex() []ruleError {
-	// To send back every rule that has invalid regex
-	// Instead of just one at a time
+// Insert into map to prevent recompiling for every call
+func (r *rules) compileRegex(store bool) []ruleError {
 	var errArr []ruleError
 	for _, rule := range r.Rules {
-		_, err := regexp.Compile(rule.Value.Regex)
+		compiled, err := regexp.Compile(rule.Value.Regex)
 		if err != nil {
 			log.Errorf("rule: %v, err: %v", rule.Name, err.Error())
 			errArr = append(errArr, ruleError{RuleName: rule.Name, Err: err.Error()})
 		}
-	}
-	if len(errArr) > 0 {
-		return errArr
+		if len(errArr) > 0 {
+			return errArr
+		}
+		// Update/Store in map
+		if store {
+			r.CompiledRegexs[rule.Name] = compiled
+		}
 	}
 	return nil
+}
+
+func (r *rules) validateAllRulesRegex() []ruleError {
+	// To send back every rule that has invalid regex)
+	return r.compileRegex(false)
 }
 
 func (r *rules) ensureLabelsContainRules(labels map[string]interface{}) error {
@@ -85,8 +94,8 @@ func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 	for _, rule := range r.Rules {
 		// Force all values to strings to prevent panic from interface conversion
 		labelVal := fmt.Sprintf("%v", labels[rule.Key])
-		match, _ := regexp.MatchString(rule.Value.Regex, labelVal)
-		if !match {
+		r, _ := r.CompiledRegexs[rule.Name]
+		if !r.MatchString(labelVal) {
 			errStr := fmt.Sprintf("Value for label '%v' does not match expression '%v'", rule.Key, rule.Value.Regex)
 			return errors.New(errStr)
 		}

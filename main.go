@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -41,6 +42,8 @@ func flags() {
 func main() {
 	// Validate command line arguments
 	flags()
+	// Instantiate map to cache regex compilations in
+	R.CompiledRegexs = make(map[string]*regexp.Regexp)
 	// Load initial rules into memory
 	R.load(*FilePath)
 	// Initialize paths and handlers in routes.go

@@ -78,7 +78,7 @@ func reloadRulesHandler() gin.HandlerFunc {
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"reloaded":   true,
-				"newRuleSet": &R,
+				"newRuleSet": &R.Rules,
 			})
 		}
 	}
@@ -89,7 +89,7 @@ func reloadRulesHandler() gin.HandlerFunc {
 // Send current ruleset
 func getRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
-		c.JSON(http.StatusOK, &R)
+		c.JSON(http.StatusOK, &R.Rules)
 	}
 	return gin.HandlerFunc(fn)
 }
