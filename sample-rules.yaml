@@ -11,4 +11,4 @@ rules:
   - name: require-num
     key: num
     value:
-      regex: ".*"
+      regex: "[0-1]{1}"

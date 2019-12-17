@@ -32,12 +32,6 @@ func labelValidationHandler() gin.HandlerFunc {
 		if c.BindJSON(&k8sData) == nil {
 			labels := k8sData.Request.Object.Metadata.Labels
 			uid := k8sData.Request.Object.Metadata.UID
-			// First check ruleset is valid
-			rulesErrs := R.validateAllRulesRegex()
-			if len(rulesErrs) > 0 {
-				sendResponse(c, k8sData, uid, false, http.StatusInternalServerError, errsToString(rulesErrs))
-				return
-			}
 			// Ensure labels provided contain keys identified in the ruleset
 			containLabelErr := R.ensureLabelsContainRules(labels)
 			// Reject request if not
@@ -69,18 +63,16 @@ func labelValidationHandler() gin.HandlerFunc {
 func reloadRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		// Load file back into mem
-		err := R.load(*FilePath)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"reloaded": false,
-				"err":      err.Error(),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"reloaded":   true,
-				"newRuleSet": &R.Rules,
-			})
-		}
+		yamlErr := R.load(*FilePath)
+		// First check ruleset is valid
+		ruleErrs := R.validateAllRulesRegex()
+		c.JSON(http.StatusOK, gin.H{
+			"reloaded": true,
+			// Ensure string to mitigate panic. (in case of nil)
+			"yamlErr":    errToStr(yamlErr),
+			"ruleErrs":   ruleErrs,
+			"newRuleSet": &R.Rules,
+		})
 	}
 	return gin.HandlerFunc(fn)
 }

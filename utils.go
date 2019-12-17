@@ -17,3 +17,11 @@ func readFile(path string) []byte {
 func str2bool(s string) bool {
 	return s != ""
 }
+
+// Remove nil possibility
+func errToStr(e error) string {
+	if e != nil {
+		return e.Error()
+	}
+	return ""
+}

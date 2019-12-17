@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -33,15 +32,6 @@ type ruleError struct {
 	Err      string `json:"err"`
 }
 
-func errsToString(r []ruleError) string {
-	var s []string
-	for _, v := range r {
-		errStr := fmt.Sprintf("rule: %v, err: %v", v.RuleName, v.Err)
-		s = append(s, errStr)
-	}
-	return strings.Join(s, " ")
-}
-
 func (r *rules) load(path string) error {
 	rulesData := readFile(path)
 	err := yaml.Unmarshal([]byte(rulesData), &r)
@@ -53,23 +43,35 @@ func (r *rules) load(path string) error {
 	return err
 }
 
+// In case of invalid regex provided
+func defaultCompiledRegex() *regexp.Regexp {
+	wildcard, _ := regexp.Compile(".*")
+	return wildcard
+}
+
 // Insert into map to prevent recompiling for every call
-func (r *rules) compileRegex(store bool) []ruleError {
+func (r *rules) compileRegex(storeInMap bool) []ruleError {
 	var errArr []ruleError
 	for _, rule := range r.Rules {
 		compiled, err := regexp.Compile(rule.Value.Regex)
 		if err != nil {
 			log.Errorf("rule: %v, err: %v", rule.Name, err.Error())
 			errArr = append(errArr, ruleError{RuleName: rule.Name, Err: err.Error()})
-		}
-		if len(errArr) > 0 {
-			return errArr
-		}
-		// Update/Store in map
-		if store {
-			r.CompiledRegexs[rule.Name] = compiled
+			// In the event of invalid regex, anything for that rule is allowed
+			r.CompiledRegexs[rule.Name] = defaultCompiledRegex()
+		} else {
+			// Store user supplied compiled regex if no error
+			if storeInMap {
+				// Update/Store in map
+				r.CompiledRegexs[rule.Name] = compiled
+			}
 		}
 	}
+	// If any regex compilation errors detected, return
+	if len(errArr) > 0 {
+		return errArr
+	}
+	// No errors
 	return nil
 }
 
@@ -94,8 +96,8 @@ func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 	for _, rule := range r.Rules {
 		// Force all values to strings to prevent panic from interface conversion
 		labelVal := fmt.Sprintf("%v", labels[rule.Key])
-		r, _ := r.CompiledRegexs[rule.Name]
-		if !r.MatchString(labelVal) {
+		regex, _ := r.CompiledRegexs[rule.Name]
+		if !regex.MatchString(labelVal) {
 			errStr := fmt.Sprintf("Value for label '%v' does not match expression '%v'", rule.Key, rule.Value.Regex)
 			return errors.New(errStr)
 		}
