@@ -2,13 +2,12 @@ rules:
   - name: require-phone-number
     key: phone-number
     value:
-      #regex: "["
       regex: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
   - name: require-email
     key: email-address
     value:
       regex: ^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$
-  - name: require-num
-    key: num
+  - name: require-number
+    key: number
     value:
       regex: "[0-1]{1}"

@@ -21,7 +21,7 @@ var (
 
 func flags() {
 	// --file arg
-	FilePath = flag.String("file", os.Getenv("FILE"), "Path to yaml file with ruleset")
+	FilePath = flag.String("file", "rules.yaml", "Path to yaml file with ruleset")
 	// --metrics arg
 	metrics := flag.Bool("metrics", str2bool(os.Getenv("METRICS")), "Enable prometheus endpoint at /metrics")
 	flag.Parse()
