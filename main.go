@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	ginprometheus "github.com/zsais/go-gin-prometheus"
 )
 
 var (
@@ -33,7 +32,7 @@ func flags() {
 	// Metrics flag validation
 	if *metrics {
 		// Create prometheus registry named "gin"
-		p := ginprometheus.NewPrometheus("gin")
+		p := newRegistry("gin")
 		// Pass gin to inject prometheus middleware
 		p.Use(G)
 	}
