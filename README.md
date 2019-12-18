@@ -1,12 +1,13 @@
 # k8s-label-rules-webhook
 
-<img style="float: right;" src="docs/police-gopher.png">
-
 Enforce standards for labels of resources being created in your k8s cluster
+
+
+![mascot](docs/police-gopher.png)
 
 ## Usage
 
-Start by creating a `rules.yaml` file containing rules you would want resources to have along with regex to specify a pattern.
+Start by creating a `rules.yaml` file containing rules for labels you require for your cluster resources to have along with a regex pattern for the values of the labels.
 
 > Any rules specified in the rulseset will be required on resources to which you configure the admission webhook to fire on. View the kubernetes deployment section.
 
