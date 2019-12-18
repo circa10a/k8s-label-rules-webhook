@@ -31,3 +31,16 @@ type status struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
+
+// Structs for other reponses within the API
+type validRulesResponse struct {
+	RulesValid bool        `json:"rulesValid"`
+	Errors     []ruleError `json:"errors"`
+}
+
+type reloadRulesResponse struct {
+	Reloaded   bool        `json:"reloaded"`
+	YamlErr    string      `json:"yamlErr"`
+	RuleErrs   []ruleError `json:"ruleErr"`
+	NewRuleSet *[]rule     `json:"newRules"`
+}

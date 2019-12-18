@@ -21,7 +21,8 @@ RUN go build -o webhook && \
     chown "$UID":"$GID" /go/src/app/webhook
 
 FROM scratch
-ENV GIN_MODE=release
+ENV GIN_MODE=release \
+    METRICS=true
 COPY --from=0 /etc/passwd /etc/passwd
 COPY --from=0 /go/src/app/webhook /
 USER 1000

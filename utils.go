@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -24,4 +25,13 @@ func errToStr(e error) string {
 		return e.Error()
 	}
 	return ""
+}
+
+// Set default value for envirinment variable if not found
+func getEnv(key, def string) string {
+	val := os.Getenv(key)
+	if len(val) == 0 {
+		return def
+	}
+	return val
 }
