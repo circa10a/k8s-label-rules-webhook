@@ -29,6 +29,8 @@ Once you have your ruleset, you can deploy the webhook several different ways.
 
 ### Docker
 
+#### Volume mount your `rules.yaml` file
+
 ```shell
 docker run -d --name k8s-label-rules-webhook \
   -p 8080: 8080 \
