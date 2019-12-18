@@ -1,6 +1,6 @@
 # k8s-label-rules-webhook
 
-![mascot](docs/police-gopher.png)
+<img style="float: right;" src="docs/police-gopher.png">
 
 Enforce standards for labels of resources being created in your k8s cluster
 
