@@ -22,6 +22,10 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY)
 
+# https://github.com/swaggo/gin-swagger
+docs:
+  swag init
+
 docker-build:
 	docker build -t $(PROJECT) .
 
