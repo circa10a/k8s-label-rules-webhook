@@ -76,6 +76,10 @@ You can access the `/validate` endpoint via `GET` request to view any issues wit
 
 Access the `rules` endpoint via `GET` request to see the current rules loaded.
 
+### Prometheus Metrics
+
+Prometheus metrics are enabled by default and are available at the `/metrics` endpoint. Simply unset the `METRICS` environment variable to disable.
+
 ## Configuration
 
 |             |                                                                       |                      |                        |           |               |

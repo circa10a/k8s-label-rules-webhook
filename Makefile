@@ -24,7 +24,7 @@ clean:
 
 # https://github.com/swaggo/gin-swagger
 docs:
-  swag init
+	swag init
 
 docker-build:
 	docker build -t $(PROJECT) .
