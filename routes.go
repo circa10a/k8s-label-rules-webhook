@@ -20,7 +20,7 @@ func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bo
 			},
 		},
 	}
-	c.JSON(code, &r)
+	c.JSON(200, &r)
 }
 
 // / context
@@ -36,14 +36,14 @@ func labelValidationHandler() gin.HandlerFunc {
 			containLabelErr := R.ensureLabelsContainRules(labels)
 			// Reject request if not
 			if containLabelErr != nil {
-				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, containLabelErr.Error())
+				sendResponse(c, k8sData, uid, false, http.StatusForbidden, containLabelErr.Error())
 				return
 			}
 			// Ensure labels provided match regex of keys identified in the ruleset
 			matchLabelErr := R.ensureLabelsMatchRules(labels)
 			// Reject request if not
 			if matchLabelErr != nil {
-				sendResponse(c, k8sData, uid, false, http.StatusBadRequest, matchLabelErr.Error())
+				sendResponse(c, k8sData, uid, false, http.StatusForbidden, matchLabelErr.Error())
 				return
 			}
 			// All constraints passed
