@@ -6,11 +6,7 @@ ENV USER=go \
     GID=1000 \
     GOOS=linux \
     GOARCH=amd64 \
-    CGO_ENABLED=0 \
-    GIT_TERMINAL_PROMPT=1
-
-RUN apk update && \
-    apk add git
+    CGO_ENABLED=0
 
 RUN go build -ldflags="-s -w" -o webhook && \
     addgroup --gid "$GID" "$USER" && \

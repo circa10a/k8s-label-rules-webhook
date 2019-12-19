@@ -42,7 +42,7 @@ docs:
 swagger-docs:
 # Swagger
 	swag init
-	sed -i 's;"//;"/;g' docs/swagger.json
+	sed -i 's;"//;"/;g' docs/swagger.json docs/docs.go
 
 
 docker-build:

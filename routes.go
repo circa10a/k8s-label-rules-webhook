@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"strings"
 
 	_ "github.com/circa10a/k8s-label-rules-webhook/docs"
 	"github.com/gin-gonic/gin"
@@ -126,7 +125,7 @@ func validateRulesHandler() gin.HandlerFunc {
 func noRouteHandler() gin.HandlerFunc {
 	// Replace doc.json to index.html to ensure user is brought to swagger site
 	fn := func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, strings.Replace(SwaggerAPIDocURLStr, "doc.json", "index.html", -1))
+		c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
 	}
 	return gin.HandlerFunc(fn)
 }
@@ -145,7 +144,7 @@ func routes(router *gin.Engine) {
 		// Validate regex pattern of rules
 		root.GET("/validate", validateRulesHandler())
 		// Swagger API Docs
-		root.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL(SwaggerAPIDocURLStr)))
+		root.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("/swagger/doc.json")))
 	}
 	// For every route not defined, forward to swagger docs
 	router.NoRoute(noRouteHandler())

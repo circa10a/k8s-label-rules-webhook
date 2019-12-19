@@ -112,7 +112,6 @@ Prometheus metrics are enabled by default and are available at the `/metrics` en
 | GIN MODE    | Runs web server in production or debug mode                           |`GIN_MODE`            | NONE                   | `false`  | `release`      |
 | PORT        | Port for web server to listen on                                      | `PORT`               | NONE                   | `false`  | `8080`         |
 | METRICS     | Enables prometheus metrics on `/metrics`(unset for false)             |`METRICS`             | `--metrics`            | `false`  | `true`         |
-| SWAGGER-URL | Location of swagger `doc.json`                                        | NONE                 | `--swagger-url`        | `false`   | `http://localhost${PORT}/swagger/doc.json`|
 | RULES       | File containing user defined ruleset(default looks to `./rules.yaml`) | NONE                 | `--file`               | `true`   | `./rules.yaml` |
 
 ## Development
