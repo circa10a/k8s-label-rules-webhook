@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"regexp"
 
@@ -33,10 +32,6 @@ func flags() {
 	FilePath = flag.String("file", defaultRulesFile, "Path to yaml file with ruleset")
 	// --metrics arg
 	metrics := flag.Bool("metrics", str2bool(os.Getenv("METRICS")), "Enable prometheus endpoint at /metrics")
-	// --swagger-url arg, default to localhost:8080/swagger/doc.json
-	SwaggerAPIDocURLFlag := flag.String("swagger-url", fmt.Sprintf("http://localhost:%v/swagger/doc.json", getEnv("PORT", "8080")), "Swagger doc endpoint")
-	SwaggerAPIDocURLStr = *SwaggerAPIDocURLFlag
-	log.Info("Swagger Doc: ", *SwaggerAPIDocURLFlag)
 	flag.Parse()
 	// Input file validation
 	if *FilePath == "" {
