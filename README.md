@@ -2,7 +2,7 @@
 
 Enforce standards for labels of resources being created in your k8s cluster
 
-![image](https://drive.google.com/uc?export=view&id=1radAK91PYYyIcNA9Cmn-04iLfNRMqv4M)
+![image](https://drive.google.com/uc?id=1radAK91PYYyIcNA9Cmn-04iLfNRMqv4M)
 
 ## Usage
 
