@@ -10,7 +10,7 @@ build:
 	$(GOBUILD) -o $(BINARY)
 
 run:
-	$(GORUN) *.go --file sample-rules.yaml --metrics
+	$(GORUN) *.go --metrics
 
 compile:
 	GOOS=linux GOARCH=amd64 go build $(GOBUILDFLAGS) -o bin/$(BINARY)-linux-amd64
