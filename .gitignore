@@ -47,9 +47,6 @@ _testmain.go
 # Common binary names for the project
 ./webhook
 ./k8s-label-rules-webhook
-# Docs
-_book/
-node_modules/
 # This file includes artifacts of Go build that should not be checked in.
 # For files created by specific development environment (e.g. editor),
 # use alternative ways to exclude files from git.
