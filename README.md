@@ -1,6 +1,6 @@
 # [k8s-label-rules-webhook](https://github.com/circa10a/k8s-label-rules-webhook)
 
-Enforce standards for labels of resources being created in your k8s cluster [![octocat](https://i.imgur.com/RzEEK4Z.png =32x32)](https://github.com/circa10a/k8s-label-rules-webhook)
+Enforce standards for labels of resources being created in your k8s cluster <a href="https://github.com/circa10a/k8s-label-rules-webhook"><img src="https://i.imgur.com/RzEEK4Z.png" alt="alt text" width="24px" height="24px">
 
 ![image](https://drive.google.com/uc?id=1radAK91PYYyIcNA9Cmn-04iLfNRMqv4M)
 
