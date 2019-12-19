@@ -1,4 +1,4 @@
-# k8s-label-rules-webhook
+# [k8s-label-rules-webhook](https://github.com/circa10a/k8s-label-rules-webhook)
 
 Enforce standards for labels of resources being created in your k8s cluster
 
