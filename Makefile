@@ -22,7 +22,7 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY)
 
-# https://github.com/swaggo/gin-swagger
+
 docs: SHELL:=/bin/bash
 docs:
 # Static Site
@@ -38,10 +38,11 @@ docs:
 	gitbook install
 	gitbook build . ./docs
 
+# https://github.com/swaggo/gin-swagger
 swagger-docs:
 # Swagger
-	#swag init
-	#sed -i 's;"//;"/;g' docs/swagger.json
+	swag init
+	sed -i 's;"//;"/;g' docs/swagger.json
 
 
 docker-build:

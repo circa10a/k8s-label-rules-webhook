@@ -32,7 +32,7 @@ func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bo
 // @Description Respond to k8s with approval or rejection of labels compared against the ruleset
 // @Produce json
 // @Success 200 {object} webhookResponse
-// @Router / [post]
+// @Router // [post]
 func labelValidationHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		k8sData := &k8sRequest{}
