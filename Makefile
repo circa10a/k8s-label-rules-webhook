@@ -23,23 +23,8 @@ clean:
 	rm -f $(BINARY)
 
 
-docs: SHELL:=/bin/bash
-docs:
-# Static Site
-	@if ! which npm 1>/dev/null; then\
-		echo "npm needs to be installed to create static site with gitbook";\
-		exit 1;\
-	fi;\
-
-	@if ! which gitbook 1>/dev/null; then\
-		echo "gitbook needs to be installed to create static site";\
-		npm install gitbook-cli -g;\
-	fi;\
-	gitbook install
-	gitbook build . ./docs
-
 # https://github.com/swaggo/gin-swagger
-swagger-docs:
+docs:
 # Swagger
 	swag init
 	sed -i 's;"//;"/;g' docs/swagger.json docs/docs.go
