@@ -50,8 +50,87 @@ COPY rules.yaml /
 
 > Kubernetes admission webhooks require https
 
-```shell
-test
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: label-rules-webhook
+  labels:
+    app: label-rules-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: label-rules-webhook
+  template:
+    metadata:
+      labels:
+        app: label-rules-webhook
+    spec:
+      containers:
+      - name: label-rules-webhook
+        image: circa10a/k8s-label-rules-webhook
+        volumeMounts:
+        - name: label-rules
+          mountPath: /rules.yaml
+          subPath: rules.yaml
+        readinessProbe:
+          httpGet:
+            path: /rules
+            port: gin-port
+          initialDelaySeconds: 5
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /rules
+            port: gin-port
+          initialDelaySeconds: 5
+          periodSeconds: 15
+        ports:
+        - name: gin-port
+          containerPort: 8080
+      volumes:
+        - name: label-rules
+          configMap:
+            name: label-rules
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: label-rules
+data:
+  rules.yaml: |
+    rules:
+      - name: require-phone-number
+        key: phone-number
+        value:
+          regex: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+      - name: require-number
+        key: number
+        value:
+          regex: "[0-1]{1}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: label-rules-webhook-service
+spec:
+  selector:
+    app: label-rules-webhook
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: gin-port
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: label-rules-webhook-ingress
+spec:
+  backend:
+    serviceName: label-rules-webhook-service
+    servicePort: 8080
 ```
 
 #### Deploy admission webhook
