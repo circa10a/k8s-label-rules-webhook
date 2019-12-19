@@ -1,0 +1,13 @@
+{
+    "title": "k8s-label-rules-webhook",
+    "plugins": [
+        "copy-code-button",
+        "github",
+        "hide-published-with"
+    ],
+    "pluginsConfig": {
+        "github": {
+            "url": "https://github.com/circa10a/k8s-label-rules-webhook"
+        }
+    }
+}

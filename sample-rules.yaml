@@ -1,0 +1,9 @@
+rules:
+  - name: require-phone-number
+    key: phone-number
+    value:
+      regex: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+  - name: require-number
+    key: number
+    value:
+      regex: "[0-1]{1}"
