@@ -1,0 +1,11 @@
+*.go
+*.mod
+*.sum
+*.yaml
+*.sh
+swagger*
+Dockerfile
+.gitignore
+.bookignore
+LICENSE
+Makefile

@@ -23,8 +23,26 @@ clean:
 	rm -f $(BINARY)
 
 # https://github.com/swaggo/gin-swagger
+docs: SHELL:=/bin/bash
 docs:
-	swag init
+# Static Site
+	@if ! which npm 1>/dev/null; then\
+		echo "npm needs to be installed to create static site with gitbook";\
+		exit 1;\
+	fi;\
+
+	@if ! which gitbook 1>/dev/null; then\
+		echo "gitbook needs to be installed to create static site";\
+		npm install gitbook-cli -g;\
+	fi;\
+	gitbook install
+	gitbook build . ./docs
+
+swagger-docs:
+# Swagger
+	#swag init
+	#sed -i 's;"//;"/;g' docs/swagger.json
+
 
 docker-build:
 	docker build -t $(PROJECT) .

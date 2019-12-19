@@ -6,9 +6,13 @@ ENV USER=go \
     GID=1000 \
     GOOS=linux \
     GOARCH=amd64 \
-    CGO_ENABLED=0
+    CGO_ENABLED=0 \
+    GIT_TERMINAL_PROMPT=1
 
-RUN go build -o webhook && \
+RUN apk update && \
+    apk add git
+
+RUN go build -ldflags="-s -w" -o webhook && \
     addgroup --gid "$GID" "$USER" && \
     adduser \
     --disabled-password \

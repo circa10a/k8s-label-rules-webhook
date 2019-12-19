@@ -2,8 +2,7 @@
 
 Enforce standards for labels of resources being created in your k8s cluster
 
-
-![mascot](docs/police-gopher.png)
+![mascot](https://i.imgur.com/4XDDuJK.png)
 
 ## Usage
 
@@ -47,15 +46,40 @@ COPY rules.yaml /
 
 ### Kubernetes
 
-
 ####  Deploy webhook application
 
-```
+> Kubernetes admission webhooks require https
+
+```shell
+test
 ```
 
 #### Deploy admission webhook
 
-```
+[More info on kubernetes admission webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+```yaml
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: label-rules-webhook
+webhooks:
+- name: my.application.domain
+  clientConfig:
+    url: "https://<deployed-app-location>/"
+  rules:
+  - operations:
+    - "CREATE"
+    - "UPDATE"
+    apiGroups:
+      - "apps"
+    apiVersions:
+      - "v1"
+      - "v1beta1"
+    resources:
+      - "deployments"
+      - "replicasets"
+  failurePolicy: Fail # Ignore, Fail
 ```
 
 ## Features
@@ -90,7 +114,6 @@ Prometheus metrics are enabled by default and are available at the `/metrics` en
 | METRICS     | Enables prometheus metrics on `/metrics`(unset for false)             |`METRICS`             | `--metrics`            | `false`  | `true`         |
 | SWAGGER-URL | Location of swagger `doc.json`                                        | NONE                 | `--swagger-url`        | `false`   | `http://localhost${PORT}/swagger/doc.json`|
 | RULES       | File containing user defined ruleset(default looks to `./rules.yaml`) | NONE                 | `--file`               | `true`   | `./rules.yaml` |
-
 
 ## Development
 
