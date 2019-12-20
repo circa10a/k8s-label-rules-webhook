@@ -22,19 +22,19 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY)
 
+coverage: export GIN_MODE=release
 coverage:
-	go test -coverprofile=c.out && go tool cover -html=c.out && rm c.out
+	go test -coverprofile=c.out | sed '/ERRO/d; /level=error/d' && go tool cover -html=c.out && rm c.out
 
 test: export GIN_MODE=release
 test:
 	go test -v | sed '/ERRO/d; /level=error/d'
 
-# https://github.com/swaggo/gin-swagger
 docs:
 # Swagger
+# https://github.com/swaggo/gin-swagger
 	swag init
 	sed -i 's;"//;"/;g' docs/swagger.json docs/docs.go
-
 
 docker-build:
 	docker build -t $(PROJECT) .
