@@ -33,7 +33,7 @@ type ruleError struct {
 }
 
 func (r *rules) load(path string) error {
-	rulesData := readFile(path)
+	rulesData, _ := readFile(path)
 	err := yaml.Unmarshal([]byte(rulesData), &r)
 	if err != nil {
 		log.Error(err)
@@ -76,7 +76,7 @@ func (r *rules) compileRegex(storeInMap bool) []ruleError {
 }
 
 func (r *rules) validateAllRulesRegex() []ruleError {
-	// To send back every rule that has invalid regex)
+	// To send back every rule that has invalid regex
 	return r.compileRegex(false)
 }
 

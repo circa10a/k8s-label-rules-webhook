@@ -7,12 +7,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func readFile(path string) []byte {
+func readFile(path string) ([]byte, error) {
 	data, fileErr := ioutil.ReadFile(path)
 	if fileErr != nil {
 		log.Fatal(fileErr)
 	}
-	return data
+	return data, fileErr
 }
 
 func str2bool(s string) bool {

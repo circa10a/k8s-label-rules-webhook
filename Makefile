@@ -10,7 +10,7 @@ build:
 	$(GOBUILD) -o $(BINARY)
 
 run:
-	$(GORUN) *.go --metrics
+	$(GORUN) . --metrics
 
 compile:
 	GOOS=linux GOARCH=amd64 go build $(GOBUILDFLAGS) -o bin/$(BINARY)-linux-amd64
@@ -22,6 +22,8 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY)
 
+coverage:
+	go test -coverprofile=c.out && go tool cover -html=c.out && rm c.out
 
 # https://github.com/swaggo/gin-swagger
 docs:
