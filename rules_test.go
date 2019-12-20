@@ -140,3 +140,37 @@ func TestValidateAllRulesRegex(t *testing.T) {
 	// Ensure no rule errors
 	assert.Equal(t, 0, len(r.validateAllRulesRegex()), "Compiling regex should not return any errors")
 }
+
+func TestEnsureLabelsContainRulesValid(t *testing.T) {
+	// New struct
+	r := &rules{}
+	// Init map
+	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	// Load valid yaml
+	err := r.load("rules.yaml")
+	if err != nil {
+		t.Error("Error loading yaml")
+	}
+	// Simulate labels from k8s request
+	labels := make(map[string]interface{})
+	labels["phone-number"] = "555-555-5555"
+	labels["number"] = "0"
+	assert.NoError(t, r.ensureLabelsContainRules(labels))
+}
+
+func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
+	// New struct
+	r := &rules{}
+	// Init map
+	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	// Load valid yaml
+	err := r.load("rules.yaml")
+	if err != nil {
+		t.Error("Error loading yaml")
+	}
+	// Simulate labels from k8s request
+	labels := make(map[string]interface{})
+	labels["phone-number"] = "555-555-5555"
+	labels["num"] = "0"
+	assert.Error(t, r.ensureLabelsContainRules(labels))
+}
