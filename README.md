@@ -169,11 +169,11 @@ Checkout the swagger api docs at `/swagger/index.html`
 
 ### Hot reloading of ruleset
 
-Update the `rules.yaml` file used by you're deployed instance then send a `POST` request to `/reload` to reload the rules into memory without downtime.
+Update the `rules.yaml` file used by your deployed instance then send a `POST` request to `/reload` to reload the rules into memory without downtime.
 
 ### Rule validation
 
-The regex supplied to each rule is compiled when the application starts and is then logged to indicate problems.
+The regex supplied to each rule is compiled when the application starts and any problems are logged.
 
 You can access the `/validate` endpoint via `GET` request to view any issues with the current ruleset that is loaded.
 
