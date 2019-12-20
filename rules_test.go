@@ -128,3 +128,17 @@ func TestCompileRegexInvalid(t *testing.T) {
 	// Ensure 1 rule error
 	assert.Equal(t, 1, len(r.compileRegex(false)), "Compiling regex should return 1 error")
 }
+
+func TestValidateAllRulesRegex(t *testing.T) {
+	// New struct
+	r := &rules{}
+	// Init map
+	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	// Load valid yaml
+	err := r.load("rules.yaml")
+	if err != nil {
+		t.Error("Error loading yaml")
+	}
+	// Ensure no rule errors
+	assert.Equal(t, 0, len(r.validateAllRulesRegex()), "Compiling regex should not return any errors")
+}
