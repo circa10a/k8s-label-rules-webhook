@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"regexp"
@@ -121,7 +120,6 @@ func TestCompileRegexInvalid(t *testing.T) {
 	// Init map
 	r.CompiledRegexs = make(map[string]*regexp.Regexp)
 	err := r.load(invalidRulesFile)
-	fmt.Println(r.Rules)
 	if err != nil {
 		t.Error("Error loading yaml")
 	}
