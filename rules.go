@@ -44,9 +44,9 @@ func (r *rules) load(path string) error {
 }
 
 // In case of invalid regex provided
-func defaultCompiledRegex() *regexp.Regexp {
-	wildcard, _ := regexp.Compile(".*")
-	return wildcard
+func defaultCompiledRegex() (*regexp.Regexp, error) {
+	wildcard, err := regexp.Compile(".*")
+	return wildcard, err
 }
 
 // Insert into map to prevent recompiling for every call
@@ -58,7 +58,8 @@ func (r *rules) compileRegex(storeInMap bool) []ruleError {
 			log.Errorf("rule: %v, err: %v", rule.Name, err.Error())
 			errArr = append(errArr, ruleError{RuleName: rule.Name, Err: err.Error()})
 			// In the event of invalid regex, anything for that rule is allowed
-			r.CompiledRegexs[rule.Name] = defaultCompiledRegex()
+			defaultRegex, _ := defaultCompiledRegex()
+			r.CompiledRegexs[rule.Name] = defaultRegex
 		} else {
 			// Store user supplied compiled regex if no error
 			if storeInMap {
