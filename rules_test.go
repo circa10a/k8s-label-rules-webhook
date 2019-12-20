@@ -10,6 +10,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func createValidLabels() map[string]interface{} {
+	labels := make(map[string]interface{})
+	labels["phone-number"] = "555-555-5555"
+	labels["number"] = "0"
+	return labels
+}
+
+func createInvalidLabels() map[string]interface{} {
+	labels := make(map[string]interface{})
+	labels["phone-number"] = "555-555-5555"
+	labels["num"] = "0"
+	return labels
+}
+
 func createInvalidYamlFile(t *testing.T, path string) {
 	// Create invalid yaml file
 	invalidYaml := `
@@ -152,9 +166,7 @@ func TestEnsureLabelsContainRulesValid(t *testing.T) {
 		t.Error("Error loading yaml")
 	}
 	// Simulate labels from k8s request
-	labels := make(map[string]interface{})
-	labels["phone-number"] = "555-555-5555"
-	labels["number"] = "0"
+	labels := createValidLabels()
 	assert.NoError(t, r.ensureLabelsContainRules(labels))
 }
 
@@ -169,8 +181,36 @@ func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
 		t.Error("Error loading yaml")
 	}
 	// Simulate labels from k8s request
-	labels := make(map[string]interface{})
-	labels["phone-number"] = "555-555-5555"
-	labels["num"] = "0"
+	labels := createInvalidLabels()
 	assert.Error(t, r.ensureLabelsContainRules(labels))
+}
+
+func TestEnsureLabelsMatchRulesValid(t *testing.T) {
+	// New struct
+	r := &rules{}
+	// Init map
+	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	// Load valid yaml
+	err := r.load("rules.yaml")
+	if err != nil {
+		t.Error("Error loading yaml")
+	}
+	// Simulate labels from k8s request
+	labels := createValidLabels()
+	assert.NoError(t, r.ensureLabelsMatchRules(labels))
+}
+
+func TestEnsureLabelsMatchRulesInvalid(t *testing.T) {
+	// New struct
+	r := &rules{}
+	// Init map
+	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	// Load valid yaml
+	err := r.load("rules.yaml")
+	if err != nil {
+		t.Error("Error loading yaml")
+	}
+	// Simulate labels from k8s request
+	labels := createInvalidLabels()
+	assert.Error(t, r.ensureLabelsMatchRules(labels))
 }

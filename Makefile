@@ -23,10 +23,12 @@ clean:
 	rm -f $(BINARY)
 
 coverage: export GIN_MODE=release
+coverage: export METRICS=true
 coverage:
 	go test -coverprofile=c.out | sed '/ERRO/d; /level=error/d' && go tool cover -html=c.out && rm c.out
 
 test: export GIN_MODE=release
+test: export METRICS=true
 test:
 	go test -v | sed '/ERRO/d; /level=error/d'
 
