@@ -25,6 +25,10 @@ clean:
 coverage:
 	go test -coverprofile=c.out && go tool cover -html=c.out && rm c.out
 
+test: export GIN_MODE=release
+test:
+	go test -v | sed '/ERRO/d; /level=error/d'
+
 # https://github.com/swaggo/gin-swagger
 docs:
 # Swagger
