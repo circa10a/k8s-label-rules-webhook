@@ -59,4 +59,32 @@ func TestReloadEndpoint(t *testing.T) {
 		Status(http.StatusOK).JSON()
 
 	response.Object().ValueEqual("reloaded", true)
+	response.Object().ValueEqual("yamlErr", "")
+	response.Object().ValueEqual("ruleErr", nil)
+	newRulesResponse := response.Object().Value("newRules").Array()
+	// 1st rule
+	newRulesResponse.Element(0).Object().ValueEqual("name", "require-phone-number")
+	newRulesResponse.Element(0).Object().ValueEqual("key", "phone-number")
+	newRulesResponse.Element(0).Object().Value("value").Object().ValueEqual("regex", "[0-9]{3}-[0-9]{3}-[0-9]{4}")
+	// 2nd rule
+	newRulesResponse.Element(1).Object().ValueEqual("name", "require-number")
+	newRulesResponse.Element(1).Object().ValueEqual("key", "number")
+	newRulesResponse.Element(1).Object().Value("value").Object().ValueEqual("regex", "[0-1]{1}")
+}
+
+func TestValidateEndpoint(t *testing.T) {
+	//start()
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+	// is it working?
+	response := e.GET("/validate").
+		Expect().
+		Status(http.StatusOK).JSON()
+
+	response.Object().ValueEqual("rulesValid", true)
+	response.Object().ValueEqual("errors", nil)
 }

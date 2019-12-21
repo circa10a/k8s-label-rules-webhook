@@ -30,7 +30,7 @@ coverage:
 test: export GIN_MODE=release
 test: export METRICS=true
 test:
-	go test -v | sed '/ERRO/d; /level=error/d'
+	go test -v | sed '/ERRO/d; /level=error/d; /printer.go/d'
 
 docs:
 # Swagger
