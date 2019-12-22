@@ -22,7 +22,6 @@ func init() {
 }
 
 func TestRulesEndpoint(t *testing.T) {
-	//start()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -33,20 +32,17 @@ func TestRulesEndpoint(t *testing.T) {
 	response := e.GET("/rules").
 		Expect().
 		Status(http.StatusOK).JSON().Array()
-
-	response.Length().Equal(2)
-	// 1st rule
-	response.Element(0).Object().ValueEqual("name", "require-phone-number")
-	response.Element(0).Object().ValueEqual("key", "phone-number")
-	response.Element(0).Object().Value("value").Object().ValueEqual("regex", "[0-9]{3}-[0-9]{3}-[0-9]{4}")
-	// 2nd rule
-	response.Element(1).Object().ValueEqual("name", "require-number")
-	response.Element(1).Object().ValueEqual("key", "number")
-	response.Element(1).Object().Value("value").Object().ValueEqual("regex", "[0-1]{1}")
+	// Ensure correct count of rules
+	response.Length().Equal(len(R.Rules))
+	// Ensure no data is malformed from yaml to response
+	for i := range response.Iter() {
+		response.Element(i).Object().ValueEqual("name", R.Rules[i].Name)
+		response.Element(i).Object().ValueEqual("key", R.Rules[i].Key)
+		response.Element(i).Object().Value("value").Object().ValueEqual("regex", R.Rules[i].Value.Regex)
+	}
 }
 
 func TestReloadEndpoint(t *testing.T) {
-	//start()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -62,18 +58,17 @@ func TestReloadEndpoint(t *testing.T) {
 	response.Object().ValueEqual("yamlErr", "")
 	response.Object().ValueEqual("ruleErr", nil)
 	newRulesResponse := response.Object().Value("newRules").Array()
-	// 1st rule
-	newRulesResponse.Element(0).Object().ValueEqual("name", "require-phone-number")
-	newRulesResponse.Element(0).Object().ValueEqual("key", "phone-number")
-	newRulesResponse.Element(0).Object().Value("value").Object().ValueEqual("regex", "[0-9]{3}-[0-9]{3}-[0-9]{4}")
-	// 2nd rule
-	newRulesResponse.Element(1).Object().ValueEqual("name", "require-number")
-	newRulesResponse.Element(1).Object().ValueEqual("key", "number")
-	newRulesResponse.Element(1).Object().Value("value").Object().ValueEqual("regex", "[0-1]{1}")
+	// Ensure correct count of rules
+	newRulesResponse.Length().Equal(len(R.Rules))
+	// Ensure no data is malformed from yaml to response
+	for i := range newRulesResponse.Iter() {
+		newRulesResponse.Element(i).Object().ValueEqual("name", R.Rules[i].Name)
+		newRulesResponse.Element(i).Object().ValueEqual("key", R.Rules[i].Key)
+		newRulesResponse.Element(i).Object().Value("value").Object().ValueEqual("regex", R.Rules[i].Value.Regex)
+	}
 }
 
 func TestValidateEndpoint(t *testing.T) {
-	//start()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -87,4 +82,162 @@ func TestValidateEndpoint(t *testing.T) {
 
 	response.Object().ValueEqual("rulesValid", true)
 	response.Object().ValueEqual("errors", nil)
+}
+
+func TestRootEndpointNoMatchLabels(t *testing.T) {
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+
+	request := &k8sRequest{
+		APIVersion: "admission.k8s.io/v1",
+		Kind:       "AdmissionReview",
+		Request: request{
+			Object: object{
+				Metadata: metadata{
+					UID: "123",
+					Labels: map[string]interface{}{
+						"test": "value",
+					},
+				},
+			},
+		},
+	}
+	// is it working?
+	response := e.POST("/").WithJSON(request).
+		Expect().
+		Status(http.StatusOK).JSON()
+
+	// Validate response to k8s
+	response.Object().ValueEqual("apiVersion", "admission.k8s.io/v1")
+	response.Object().ValueEqual("kind", "AdmissionReview")
+	response.Object().Value("response").Object().ValueEqual("allowed", false)
+	response.Object().Value("response").Object().ValueEqual("uid", "123")
+	response.Object().Value("response").Object().Value("status").Object().ValueEqual("code", 403)
+	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "phone-number not in labels")
+}
+
+func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+
+	request := &k8sRequest{
+		APIVersion: "admission.k8s.io/v1",
+		Kind:       "AdmissionReview",
+		Request: request{
+			Object: object{
+				Metadata: metadata{
+					UID: "123",
+					Labels: map[string]interface{}{
+						"phone-number": "value",
+						"number":       "0",
+					},
+				},
+			},
+		},
+	}
+	// is it working?
+	response := e.POST("/").WithJSON(request).
+		Expect().
+		Status(http.StatusOK).JSON()
+
+	// Validate response to k8s
+	response.Object().ValueEqual("apiVersion", "admission.k8s.io/v1")
+	response.Object().ValueEqual("kind", "AdmissionReview")
+	response.Object().Value("response").Object().ValueEqual("allowed", false)
+	response.Object().Value("response").Object().ValueEqual("uid", "123")
+	response.Object().Value("response").Object().Value("status").Object().ValueEqual("code", 403)
+	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "Value for label 'phone-number' does not match expression '[0-9]{3}-[0-9]{3}-[0-9]{4}'")
+}
+
+func TestRootEndpointValidLabels(t *testing.T) {
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+
+	request := &k8sRequest{
+		APIVersion: "admission.k8s.io/v1",
+		Kind:       "AdmissionReview",
+		Request: request{
+			Object: object{
+				Metadata: metadata{
+					UID: "123",
+					Labels: map[string]interface{}{
+						"phone-number": "555-555-5555",
+						"number":       0,
+					},
+				},
+			},
+		},
+	}
+	// is it working?
+	response := e.POST("/").WithJSON(request).
+		Expect().
+		Status(http.StatusOK).JSON()
+
+	// Validate response to k8s
+	response.Object().ValueEqual("apiVersion", "admission.k8s.io/v1")
+	response.Object().ValueEqual("kind", "AdmissionReview")
+	response.Object().Value("response").Object().ValueEqual("allowed", true)
+	response.Object().Value("response").Object().ValueEqual("uid", "123")
+	response.Object().Value("response").Object().Value("status").Object().ValueEqual("code", 200)
+	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "Labels conform to ruleset")
+}
+
+func TestRootEndpointNoPayload(t *testing.T) {
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+
+	// is it working?
+	response := e.POST("/").WithJSON("").
+		Expect().
+		Status(http.StatusBadRequest).JSON()
+	// Validate err response to empty body POST
+	response.Object().ValueEqual("err", "Improperly formatted request sent")
+}
+
+func TestUndefinedRouteRedirect(t *testing.T) {
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+
+	// is it working?
+	response := e.GET("/notthere").
+		Expect().
+		Status(http.StatusOK)
+	// Ensure proper refirect to swagger docs
+	response.Body().Contains("swagger-ui")
+}
+
+func TestMetricsEndppoint(t *testing.T) {
+	// run server using httptest
+	server := httptest.NewServer(G)
+	defer server.Close()
+
+	// create httpexpect instance
+	e := httpexpect.New(t, server.URL)
+
+	// is it working?
+	response := e.GET("/metrics").
+		Expect().
+		Status(http.StatusOK).ContentType("text/plain")
+	// Ensure proper refirect to swagger docs
+	response.Body().Contains("gin_request_duration_seconds_sum")
 }

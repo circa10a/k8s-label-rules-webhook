@@ -6,6 +6,8 @@ Enforce standards for labels of resources being created in your k8s cluster
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/circa10a/k8s-label-rules-webhook)](https://goreportcard.com/report/github.com/circa10a/k8s-label-rules-webhook)
 
+![Docker Pulls](https://img.shields.io/docker/pulls/circa10a/k8s-label-rules-webhook?style=plastic)
+
 ## Usage
 
 ![gif](https://drive.google.com/uc?id=17ePGrn9iZ-xYCEICFnUwCwClT71VgglB)
@@ -212,3 +214,9 @@ make run
 ```
 
 Access via http://localhost:8080
+
+### Test
+
+```shell
+make test
+```

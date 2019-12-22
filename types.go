@@ -4,14 +4,20 @@ package main
 type k8sRequest struct {
 	APIVersion string
 	Kind       string
-	Request    struct {
-		Object struct {
-			Metadata struct {
-				UID    string
-				Labels map[string]interface{}
-			}
-		}
-	}
+	Request    request
+}
+
+type request struct {
+	Object object
+}
+
+type object struct {
+	Metadata metadata
+}
+
+type metadata struct {
+	UID    string
+	Labels map[string]interface{}
 }
 
 // Structure of response to tell k8s if the resource is allowed or not
