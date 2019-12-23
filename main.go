@@ -27,6 +27,7 @@ var (
 	G = gin.Default()
 )
 
+// Read flags from command line args and set defaults
 func flags() {
 	// --file arg
 	FilePath = flag.String("file", defaultRulesFile, "Path to yaml file with ruleset")

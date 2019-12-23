@@ -4,6 +4,31 @@ Enforce standards for labels of resources being created in your k8s cluster
 
 ![image](https://drive.google.com/uc?id=1radAK91PYYyIcNA9Cmn-04iLfNRMqv4M)
 
+[![Build Status](https://travis-ci.org/circa10a/k8s-label-rules-webhook.svg?branch=master)](https://travis-ci.org/circa10a/k8s-label-rules-webhook)
+[![Go Report Card](https://goreportcard.com/badge/github.com/circa10a/k8s-label-rules-webhook)](https://goreportcard.com/report/github.com/circa10a/k8s-label-rules-webhook)
+![Docker Pulls](https://img.shields.io/docker/pulls/circa10a/k8s-label-rules-webhook?style=plastic)
+
+## Table of Contents
+
+* [Usage](#usage)
+  + [Docker](#docker)
+    - [Volume mount your `rules.yaml` file](#volume-mount-your-rulesyaml-file)
+    - [Build your own docker image](#build-your-own-docker-image)
+  + [Kubernetes](#kubernetes)
+    - [Deploy webhook application](#deploy-webhook-application)
+    - [Deploy admission webhook](#deploy-admission-webhook)
+* [Features](#features)
+  + [Hot reloading of ruleset](#hot-reloading-of-ruleset)
+  + [Rule validation](#rule-validation)
+  + [Easily view loaded ruleset](#easily-view-loaded-ruleset)
+  + [Prometheus Metrics](#prometheus-metrics)
+* [Configuration](#configuration)
+* [Development](#development)
+  + [Build](#build)
+  + [Run](#run)
+  + [Test](#test)
+* [Changelog](#changelog)
+
 ## Usage
 
 ![gif](https://drive.google.com/uc?id=17ePGrn9iZ-xYCEICFnUwCwClT71VgglB)
@@ -169,17 +194,17 @@ Checkout the swagger api docs at `/swagger/index.html`
 
 ### Hot reloading of ruleset
 
-Update the `rules.yaml` file used by you're deployed instance then send a `POST` request to `/reload` to reload the rules into memory without downtime.
+Update the `rules.yaml` file used by your deployed instance then send a `POST` request to `/reload` to reload the rules into memory without downtime.
 
 ### Rule validation
 
-The regex supplied to each rule is compiled when the application starts and is then logged to indicate problems.
+The regex supplied to each rule is compiled when the application starts and any problems are logged.
 
 You can access the `/validate` endpoint via `GET` request to view any issues with the current ruleset that is loaded.
 
 ### Easily view loaded ruleset
 
-Access the `rules` endpoint via `GET` request to see the current rules loaded.
+Access the `/rules` endpoint via `GET` request to see the current rules loaded.
 
 ### Prometheus Metrics
 
@@ -210,3 +235,13 @@ make run
 ```
 
 Access via http://localhost:8080
+
+### Test
+
+```shell
+make test
+```
+
+## Changelog
+
+[Changelog.md](CHANGELOG.md)

@@ -36,7 +36,7 @@ func labelValidationHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		k8sData := &k8sRequest{}
 		// If no binding err
-		if c.BindJSON(&k8sData) == nil {
+		if c.ShouldBindJSON(&k8sData) == nil {
 			labels := k8sData.Request.Object.Metadata.Labels
 			uid := k8sData.Request.Object.Metadata.UID
 			// Ensure labels provided contain keys identified in the ruleset
