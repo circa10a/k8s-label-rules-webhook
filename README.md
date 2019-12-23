@@ -11,7 +11,7 @@ Enforce standards for labels of resources being created in your k8s cluster
 
 * [Usage](#usage)
   + [Docker](#docker)
-    - [Volume mount your `rules.yaml` file](#volume-mount-your--rulesyaml--file)
+    - [Volume mount your `rules.yaml` file](#volume-mount-your-rulesyaml-file)
     - [Build your own docker image](#build-your-own-docker-image)
   + [Kubernetes](#kubernetes)
     - [Deploy webhook application](#deploy-webhook-application)
@@ -203,7 +203,7 @@ You can access the `/validate` endpoint via `GET` request to view any issues wit
 
 ### Easily view loaded ruleset
 
-Access the `rules` endpoint via `GET` request to see the current rules loaded.
+Access the `/rules` endpoint via `GET` request to see the current rules loaded.
 
 ### Prometheus Metrics
 
