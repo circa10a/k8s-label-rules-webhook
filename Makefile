@@ -5,7 +5,7 @@ GORUN=$(GOCMD) run
 GOBUILDFLAGS=-ldflags="-s -w"
 PROJECT=circa10a/k8s-label-rules-webhook
 BINARY=webhook
-VERSION=0.0.2
+VERSION=0.0.1
 
 # First target for travis ci
 test: export GIN_MODE=release
