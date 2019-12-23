@@ -7,6 +7,27 @@ Enforce standards for labels of resources being created in your k8s cluster
 [![Go Report Card](https://goreportcard.com/badge/github.com/circa10a/k8s-label-rules-webhook)](https://goreportcard.com/report/github.com/circa10a/k8s-label-rules-webhook)
 ![Docker Pulls](https://img.shields.io/docker/pulls/circa10a/k8s-label-rules-webhook?style=plastic)
 
+## Table of Contents
+
+* [Usage](#usage)
+  + [Docker](#docker)
+    - [Volume mount your `rules.yaml` file](#volume-mount-your--rulesyaml--file)
+    - [Build your own docker image](#build-your-own-docker-image)
+  + [Kubernetes](#kubernetes)
+    - [Deploy webhook application](#deploy-webhook-application)
+    - [Deploy admission webhook](#deploy-admission-webhook)
+* [Features](#features)
+  + [Hot reloading of ruleset](#hot-reloading-of-ruleset)
+  + [Rule validation](#rule-validation)
+  + [Easily view loaded ruleset](#easily-view-loaded-ruleset)
+  + [Prometheus Metrics](#prometheus-metrics)
+* [Configuration](#configuration)
+* [Development](#development)
+  + [Build](#build)
+  + [Run](#run)
+  + [Test](#test)
+* [Changelog](#changelog)
+
 ## Usage
 
 ![gif](https://drive.google.com/uc?id=17ePGrn9iZ-xYCEICFnUwCwClT71VgglB)
@@ -219,3 +240,7 @@ Access via http://localhost:8080
 ```shell
 make test
 ```
+
+## Changelog
+
+[Changelog.md](CHANGELOG.md)

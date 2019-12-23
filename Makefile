@@ -5,6 +5,7 @@ GORUN=$(GOCMD) run
 GOBUILDFLAGS=-ldflags="-s -w"
 PROJECT=circa10a/k8s-label-rules-webhook
 BINARY=webhook
+VERSION="0.1.0"
 
 # First target for travis ci
 test: export GIN_MODE=release
@@ -48,3 +49,8 @@ docker-run:
     $(PROJECT) --file rules.yaml --metrics
 
 docker-dev: docker-build docker-run
+
+release: ARCH="linux-amd64"
+release:
+	GOOS=linux GOARCH=amd64 go build $(GOBUILDFLAGS) -o $(BINARY)
+	tar -czf $(BINARY)-$(VERSION)-linux-amd64.tar.gz $(BINARY)
