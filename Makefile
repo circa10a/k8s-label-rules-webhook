@@ -57,5 +57,5 @@ release:
 
 docker-release: docker-build
 docker-release:
-	echo "$DOCKER_PASSWORD" | docker login -u $USERNAME --password-stdin
+	echo "${DOCKER_PASSWORD}" | docker login -u ${USERNAME} --password-stdin
 	docker push $(PROJECT):$(VERSION)

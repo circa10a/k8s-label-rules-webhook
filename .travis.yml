@@ -21,6 +21,7 @@ before_deploy:
 deploy:
   - provider: script
     script: make docker-release
+    skip_cleanup: true
     on:
       branch: dev
   - provider: releases
