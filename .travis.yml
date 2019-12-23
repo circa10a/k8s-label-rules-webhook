@@ -1,6 +1,9 @@
 language: go
 
-install: go install
+go:
+  - "1.13"
+
+install: go build
 
 script:
   - go vet ./...
