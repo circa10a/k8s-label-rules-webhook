@@ -10,15 +10,15 @@ script:
   - go vet ./...
   - make test
 
-before_deploy:
-  - if [  ! -f /tmp/tagged ]; then
-      git config --local user.name "$USERNAME"
-      git config --local user.email "$EMAIL"
-      make release
-      export TRAVIS_TAG=$(grep -o "[0-9]\.[0-9]\.[0-9]"  Makefile)
-      export TRAVIS_ARTIFACT=$(ls *.tar.gz)
-      git tag $TRAVIS_TAG && touch /tmp/tagged
-    fi
+before_deploy: |
+  if [  ! -f /tmp/tagged ]; then
+    git config --local user.name "$USERNAME"
+    git config --local user.email "$EMAIL"
+    make release
+    export TRAVIS_TAG=$(grep -o "[0-9]\.[0-9]\.[0-9]"  Makefile)
+    export TRAVIS_ARTIFACT=$(ls *.tar.gz)
+    git tag $TRAVIS_TAG && touch /tmp/tagged
+  fi
 
 deploy:
   - provider: script
