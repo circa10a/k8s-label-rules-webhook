@@ -17,7 +17,7 @@ func init() {
 	R.CompiledRegexs = make(map[string]*regexp.Regexp)
 	// Load initial rules into memory
 	R.load(*FilePath)
-	// load hadnlers into gin engine
+	// load handlers into gin engine
 	routes(G)
 }
 
@@ -226,7 +226,7 @@ func TestUndefinedRouteRedirect(t *testing.T) {
 	response.Body().Contains("swagger-ui")
 }
 
-func TestMetricsEndppoint(t *testing.T) {
+func TestMetricsEndpoint(t *testing.T) {
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
