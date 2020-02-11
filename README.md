@@ -2,7 +2,7 @@
 
 Enforce standards for labels of resources being created in your k8s cluster
 
-![image](https://drive.google.com/uc?id=1radAK91PYYyIcNA9Cmn-04iLfNRMqv4M)
+![image](https://i.imgur.com/yiqw1we.png)
 
 [![Build Status](https://travis-ci.org/circa10a/k8s-label-rules-webhook.svg?branch=master)](https://travis-ci.org/circa10a/k8s-label-rules-webhook)
 [![Go Report Card](https://goreportcard.com/badge/github.com/circa10a/k8s-label-rules-webhook)](https://goreportcard.com/report/github.com/circa10a/k8s-label-rules-webhook)
@@ -32,7 +32,7 @@ Enforce standards for labels of resources being created in your k8s cluster
 
 ## Usage
 
-![gif](https://drive.google.com/uc?id=17ePGrn9iZ-xYCEICFnUwCwClT71VgglB)
+![gif](https://j.gifs.com/6X7Vvn.gif)
 
 Start by creating a `rules.yaml` file containing rules for labels you require for your cluster resources to have along with a regex pattern for the values of the labels.
 
