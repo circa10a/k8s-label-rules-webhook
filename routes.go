@@ -116,8 +116,7 @@ func validateRulesHandler() gin.HandlerFunc {
 		} else {
 			rulesValid = true
 		}
-		validRulesResponse := &validRulesResponse{RulesValid: rulesValid, Errors: err}
-		c.JSON(http.StatusOK, &validRulesResponse)
+		c.JSON(http.StatusOK, &validRulesResponse{RulesValid: rulesValid, Errors: err})
 	}
 	return gin.HandlerFunc(fn)
 }

@@ -23,6 +23,8 @@ var (
 	SwaggerAPIDocURLStr string
 	// R main rules struct to hold current ruleset
 	R rules
+	// Version is used to output the version of the application
+	Version string
 	// G default gin engine
 	G = gin.Default()
 )
@@ -58,6 +60,8 @@ func flags() {
 // @license.name MIT
 // @license.url https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE
 func main() {
+	// Output version of application
+	log.Infof("Version: %v", Version)
 	// Validate command line arguments
 	flags()
 	// Instantiate map to cache regex compilations in

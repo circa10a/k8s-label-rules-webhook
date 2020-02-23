@@ -2,10 +2,10 @@ GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GORUN=$(GOCMD) run
-GOBUILDFLAGS=-ldflags="-s -w"
 PROJECT=circa10a/k8s-label-rules-webhook
 BINARY=webhook
-VERSION=0.1.0
+VERSION=0.1.1
+GOBUILDFLAGS=-ldflags="-s -w -X main.Version=$(VERSION)"
 
 # First target for travis ci
 test: export GIN_MODE=release
@@ -14,7 +14,7 @@ test:
 	go test -v | sed '/ERRO/d; /level=error/d; /printer.go/d'
 
 build:
-	$(GOBUILD) -o $(BINARY)
+	$(GOBUILD) $(GOBUILDFLAGS) -o $(BINARY)
 
 run:
 	$(GORUN) . --metrics
