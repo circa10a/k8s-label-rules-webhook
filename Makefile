@@ -4,7 +4,7 @@ GOCLEAN=$(GOCMD) clean
 GORUN=$(GOCMD) run
 PROJECT=circa10a/k8s-label-rules-webhook
 BINARY=webhook
-VERSION=0.1.1
+VERSION=$(shell git describe --tags --abbrev=0 --always)
 GOBUILDFLAGS=-ldflags="-s -w -X main.Version=$(VERSION)"
 
 # First target for travis ci
