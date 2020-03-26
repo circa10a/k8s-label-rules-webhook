@@ -96,7 +96,7 @@ data:
     HFetw92NgSOD5Rn2d1u1QPxkAoEsl4tUR3tYaUfMC4oI3yD3uWkcMeAfp3Xdu/JO
     7AOg
     -----END CERTIFICATE-----
-  # This key isnt actually used anywhere, don't get excited
+  # This key isn't actually used anywhere, don't get excited
   domain.key: |
     -----BEGIN PRIVATE KEY-----
     MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQD02inAzaJzWKiC
