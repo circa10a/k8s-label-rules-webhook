@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: label-rules-webhook
-        image: circa10a/k8s-label-rules-webhook:test
+        image: circa10a/k8s-label-rules-webhook
         env:
         - name: TLS_ENABLED
           value: "true"
