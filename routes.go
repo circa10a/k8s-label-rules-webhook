@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	_ "github.com/circa10a/k8s-label-rules-webhook/docs"
+	_ "github.com/circa10a/k8s-label-rules-webhook/api"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"

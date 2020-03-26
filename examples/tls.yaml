@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: label-rules-webhook
+  labels:
+    app: label-rules-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: label-rules-webhook
+  template:
+    metadata:
+      labels:
+        app: label-rules-webhook
+    spec:
+      containers:
+      - name: label-rules-webhook
+        image: circa10a/k8s-label-rules-webhook:test
+        env:
+        - name: TLS_ENABLED
+          value: "true"
+        - name: TLS_CERT
+          value: "/domain.crt"
+        - name: TLS_KEY
+          value: "/domain.key"
+        volumeMounts:
+        - name: webhook-config
+          mountPath: /rules.yaml
+          subPath: rules.yaml
+        - name: webhook-config
+          mountPath: /domain.crt
+          subPath: domain.crt
+        - name: webhook-config
+          mountPath: /domain.key
+          subPath: domain.key
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /rules
+            port: gin-port
+          initialDelaySeconds: 5
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /rules
+            port: gin-port
+          initialDelaySeconds: 5
+          periodSeconds: 15
+        ports:
+        - name: gin-port
+          containerPort: 8443
+      volumes:
+        - name: webhook-config
+          configMap:
+            name: webhook-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webhook-config
+data:
+  rules.yaml: |
+    rules:
+      - name: require-phone-number
+        key: phone-number
+        value:
+          regex: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+      - name: require-number
+        key: number
+        value:
+          regex: "[0-1]{1}"
+  domain.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIID7zCCAtegAwIBAgIJALJb1j1J6qKJMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYD
+    VQQGEwJVUzEOMAwGA1UECAwFVGV4YXMxDzANBgNVBAcMBkRhbGxhczEPMA0GA1UE
+    CgwGY2xlbW9uMQ0wCwYDVQQLDARub25lMRYwFAYDVQQDDA1zb21ldGhpbmcuY29t
+    MSUwIwYJKoZIhvcNAQkBFhZjYWxlYmxlbW9pbmVAZ21haWwuY29tMB4XDTIwMDMy
+    NTIzMzMzNVoXDTIxMDMyNTIzMzMzNVowgY0xCzAJBgNVBAYTAlVTMQ4wDAYDVQQI
+    DAVUZXhhczEPMA0GA1UEBwwGRGFsbGFzMQ8wDQYDVQQKDAZjbGVtb24xDTALBgNV
+    BAsMBG5vbmUxFjAUBgNVBAMMDXNvbWV0aGluZy5jb20xJTAjBgkqhkiG9w0BCQEW
+    FmNhbGVibGVtb2luZUBnbWFpbC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+    ggEKAoIBAQD02inAzaJzWKiC+BxL8OrtJ1iAjmXGsFraCz7CNt3jlNq54G0w1zNM
+    mYcUKDRxDv7nvabiWFSdGcDK3hVE7DzBQUt5OQhEtTFKjW/BFTj1X7unCMa3bgZP
+    fDocwG18CVMpTIy0Hm4Cgd+B6tI+6st9QqvarBL9lf0qOb8G0A+KSIyFhbV/OhEf
+    spCH5C52rKQGv/C71KutbqvavAnM7lcKhri/wF9ceyK6DkCN4RXPsorpS5a7SdHN
+    aKbFkFjVYMk88Zhic3SYjxTp0Lmxe7k0999ticVDpyZuvTLrzV7W5PDpmVTdelg4
+    k05QTHKxTl9zXYZP0LfniM6zhSs4WOi9AgMBAAGjUDBOMB0GA1UdDgQWBBSR8V0p
+    OGneNojttm9cadMvlmJtcjAfBgNVHSMEGDAWgBSR8V0pOGneNojttm9cadMvlmJt
+    cjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQCNiecfOXTNkjfafPEX
+    qVUAGY4C7JcIqcIaFoIHrSSfiKWBTDlKX41kL0ZSmFzHaca/jBzcryoyJannpz/f
+    MIjZfmtf4mqZ26EzFJ+X/Jo/RymvhsX45HQE60ham07BPl6NUgp4KaX7bFRPn38K
+    CWApTVZh6TalZeCNpyMXiYIarxBmf4a+xPME34XnFqIWN6mTrVtVG5Wew3Rbt/2Z
+    i8yGAezRGkmFS2Yi83DilCdegK6tJZ+fGf9T//iGKRQ1g7NyCB/YzRJDtMEi5lt3
+    HFetw92NgSOD5Rn2d1u1QPxkAoEsl4tUR3tYaUfMC4oI3yD3uWkcMeAfp3Xdu/JO
+    7AOg
+    -----END CERTIFICATE-----
+  # This key isnt actually used anywhere, don't get excited
+  domain.key: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQD02inAzaJzWKiC
+    +BxL8OrtJ1iAjmXGsFraCz7CNt3jlNq54G0w1zNMmYcUKDRxDv7nvabiWFSdGcDK
+    3hVE7DzBQUt5OQhEtTFKjW/BFTj1X7unCMa3bgZPfDocwG18CVMpTIy0Hm4Cgd+B
+    6tI+6st9QqvarBL9lf0qOb8G0A+KSIyFhbV/OhEfspCH5C52rKQGv/C71Kutbqva
+    vAnM7lcKhri/wF9ceyK6DkCN4RXPsorpS5a7SdHNaKbFkFjVYMk88Zhic3SYjxTp
+    0Lmxe7k0999ticVDpyZuvTLrzV7W5PDpmVTdelg4k05QTHKxTl9zXYZP0LfniM6z
+    hSs4WOi9AgMBAAECggEAeuf753URY3cQd1WV1qTjOBH1Aer4uaiSojrc0N57uR5i
+    QMWf6dFMRdoXDQ41bL8LQ0ZWu+1847MmrG6YHJW81YEyInJ3bQ3K5VJj03cUtU7N
+    wkXMggzvi/yeqwoIqyd/IA713gAcVpPcnrlBuiVf6cuKumR/z9z3TLfZ5NCRzGYt
+    EVTUr3N1XJC7BeRrLFXsM3Q0z+WHNCLPCOWR15owEgFCXnUVJDH404PIGsZgRULm
+    M5Nx8HFfWb/x6kUQhChf0iB/pzidYPLwk8874crmaYc4jnoqW3Ty5f43WgQTwzy6
+    7QStVcOhUhfNk5wh48+j4vR99tp4o39eeQEOcSPTvQKBgQD7ZTxEAO4iFRVMIclX
+    sp9Yp0N4ioN/At4lWePV2W7CTwQYFi/DokyPoOfBCPvcdWqPFI85e13F+OPxHkm8
+    V5Lej73zV+YUJZ1LJHP1+tzNK3AoXjF4sq6CVwt0VtrOiaL7ftJ0UBRi1IwSHiSv
+    8YwJQWenQq1l8LEeXgv1+uol0wKBgQD5Vj9Dt92glaL5eF+LZIFlSpyxL6wmxyur
+    zddlSW7qLwGR+u20tHQe9zd7KiuyPSz6H4G3U13Tkvgt85u5JHwnH0gI7nErrQCj
+    wC5dF/06lYNfRG1brIBIrfAZDU5oLw9oCcNxTqFJbeMNUpGtAci8WdDybOvq0Nv0
+    GG+p92bNLwKBgHkyPhKezC8cMO9KHpIr6AxKXwm+5VQXIteo9WEEeRQuGdAu6goL
+    tZNMxE3Yset/o8ak58OTiQrHScTVkEC/i2vGqpGlX6N42tL+GPWOYmJ7PZAIkRsa
+    MW1e34PP157Y1f0fEADJFnrq8zhM1e0IqzVPFdSaHZRWrFzyhBurQrTHAoGAE6d2
+    yTG/KJ9i/2M7tNMxV/ivrU/itBPTH3HUXsmREqit6QHspufql15JY04Jr70exICj
+    Sv4pUToukgC377ouhy7yELIq/ZRfjojhnrj7XxjWCDZuoGFSo2gCmxbvbUr4Xe0X
+    GOFn2U/uK+isTwTq+93gmJt5ZUMdc3pRowY7dkUCgYB+98Q5G2o5tZGJ0Xw6tMXh
+    C2LPuKrJYao91mKB0uaupPHaXeB2b3hV5/y5KIzzDJfF1prtb/tzyIVv6OSXdvI9
+    fZXBWJ9eQkx5uUSJGN6YZ/Q/mmFZzXMLWNEUcqBqRJHl9Ks57xgARbiIENMZhTcG
+    kXgI9XSJRyooteWERWKqwA==
+    -----END PRIVATE KEY-----

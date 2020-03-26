@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"regexp"
 
@@ -17,6 +18,14 @@ const (
 var (
 	// FilePath String pointer of path to rules yaml file
 	FilePath *string
+	// TLS Enable TLS
+	TLS *bool
+	// TLSCert Path to certificate
+	TLSCert *string
+	// TLSKey Path to key
+	TLSKey *string
+	// TLSPort TLS listening port
+	TLSPort *int
 	// SwaggerAPIDocURLFlag Swagger URL Flag
 	SwaggerAPIDocURLFlag *string
 	// SwaggerAPIDocURLStr Swagger URL Flag
@@ -35,6 +44,15 @@ func flags() {
 	FilePath = flag.String("file", defaultRulesFile, "Path to yaml file with ruleset")
 	// --metrics arg
 	metrics := flag.Bool("metrics", str2bool(os.Getenv("METRICS")), "Enable prometheus endpoint at /metrics")
+	// --tls arg
+	TLS = flag.Bool("tls", str2bool(os.Getenv("TLS_ENABLED")), "Enable TLS")
+	// --tls-cert arg
+	TLSCert = flag.String("tls-cert", os.Getenv("TLS_CERT"), "Path to TLS certificate")
+	// --tls-key arg
+	TLSKey = flag.String("tls-key", os.Getenv("TLS_KEY"), "Path to TLS key")
+	// --tls-port arg
+	TLSPort = flag.Int("tls-port", 8443, "TLS listening port")
+
 	flag.Parse()
 	// Input file validation
 	if *FilePath == "" {
@@ -51,7 +69,7 @@ func flags() {
 }
 
 // @title k8s-label-rules-webhook
-// @version 0.1.0
+// @version 0.2.0
 // @description A kubernetes webhook to standardize labels on resources
 
 // @contact.name GitHub
@@ -70,7 +88,11 @@ func main() {
 	R.load(*FilePath)
 	// Initialize paths and handlers in routes.go
 	routes(G)
-	// Start web server
+	// Listen via https if TLS enabled
+	if *TLS {
+		G.RunTLS(fmt.Sprintf(":%v", *TLSPort), *TLSCert, *TLSKey)
+	}
+	// Else listen on http
 	// Defaults to port 8080, can be overridden via PORT env var.
 	// Example: export PORT=3000
 	G.Run()
