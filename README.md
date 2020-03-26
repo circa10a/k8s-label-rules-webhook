@@ -17,6 +17,7 @@ Enforce standards for labels of resources being created in your k8s cluster
     - [Build your own docker image](#build-your-own-docker-image)
   + [Kubernetes](#kubernetes)
     - [Deploy webhook application](#deploy-webhook-application)
+    - [Deploy webhook application (TLS)](#deploy-webhook-application-tls)
     - [Deploy admission webhook](#deploy-admission-webhook)
 * [Features](#features)
   + [Hot reloading of ruleset](#hot-reloading-of-ruleset)
@@ -29,6 +30,7 @@ Enforce standards for labels of resources being created in your k8s cluster
   + [Run](#run)
   + [Test](#test)
 * [Changelog](#changelog)
+* [Troubleshooting](#troubleshooting)
 
 ## Usage
 
@@ -161,6 +163,14 @@ spec:
     servicePort: 8080
 ```
 
+#### Deploy webhook application (TLS)
+
+To have the web server listen on https, you need to supply a certificate and a key in conjunction with the appropriate[configuration options](#configuration).
+
+Here's an [example deployment](examples/tls.yaml) which supplies a cert, key and enables TLS in the application.
+
+> Note: The default https port is `8443`
+
 #### Deploy admission webhook
 
 [More info on kubernetes admission webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
@@ -216,10 +226,14 @@ Prometheus metrics are enabled by default and are available at the `/metrics` en
 |             |                                                                       |                      |                        |           |               |
 |-------------|-----------------------------------------------------------------------|----------------------|------------------------|-----------|---------------|
 | Name        | Description                                                           | Environment Variable | Command Line Argument  | Required | Default        |
-| GIN MODE    | Runs web server in production or debug mode                           |`GIN_MODE`            | NONE                   | `false`  | `release`      |
+| GIN MODE    | Runs web server in production or debug mode                           | `GIN_MODE`           | NONE                   | `false`  | `release`      |
 | PORT        | Port for web server to listen on                                      | `PORT`               | NONE                   | `false`  | `8080`         |
-| METRICS     | Enables prometheus metrics on `/metrics`(unset for false)             |`METRICS`             | `--metrics`            | `false`  | `true`         |
+| METRICS     | Enables prometheus metrics on `/metrics`(unset for false)             | `METRICS`            | `--metrics`            | `false`  | `true`         |
 | RULES       | File containing user defined ruleset(default looks to `./rules.yaml`) | NONE                 | `--file`               | `true`   | `./rules.yaml` |
+| TLS         | Start web server listening on HTTPS                                   | `TLS_ENABLED`        | `--tls`                | `false`  | `false`        |
+| TLS CERT    | TLS Certificate file path                                             | `TLS_CERT`           | `--tls-cert`           | `false`  | None           |
+| TLS KEY     | TLS key file path                                                     | `TLS_KEY`            | `--tls-key`            | `false ` | None           |
+| TLS PORT    | TLS listening port                                                    | None                 | `--tls-port`           | `false`  | `8443`         |
 
 ## Development
 
@@ -246,3 +260,13 @@ make test
 ## Changelog
 
 [Changelog.md](CHANGELOG.md)
+
+## Troubleshooting
+
+### Debug web server
+
+Try setting the debug environment variable for the gin web server which is `GIN_MODE=debug`.
+
+### Rule validation problems
+
+Ensure there are no regex compilation errors by accessing the `/validate` endpoint.
