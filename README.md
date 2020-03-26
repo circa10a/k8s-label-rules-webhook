@@ -165,7 +165,7 @@ spec:
 
 #### Deploy webhook application (TLS)
 
-To have the web server list on https, you need to supply a certificate and a key in conjunction with the [configuration options](#configuration)
+To have the web server listen on https, you need to supply a certificate and a key in conjunction with the appropriate[configuration options](#configuration).
 
 Here's an [example deployment](examples/tls.yaml) which supplies a cert, key and enables TLS in the application.
 
