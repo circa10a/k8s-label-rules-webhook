@@ -8,7 +8,8 @@ ENV USER=go \
     GOARCH=amd64 \
     CGO_ENABLED=0
 
-RUN go build -ldflags="-s -w" -o webhook && \
+RUN go build -ldflags="-s -w -X main.Version=$(grep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}' Makefile)" \
+    -o webhook && \
     addgroup --gid "$GID" "$USER" && \
     adduser \
     --disabled-password \
