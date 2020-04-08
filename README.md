@@ -8,6 +8,7 @@ Enforce standards for labels of resources being created in your k8s cluster
 [![Go Report Card](https://goreportcard.com/badge/github.com/circa10a/k8s-label-rules-webhook)](https://goreportcard.com/report/github.com/circa10a/k8s-label-rules-webhook)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/circa10a/k8s-label-rules-webhook?style=plastic)
 ![Docker Pulls](https://img.shields.io/docker/pulls/circa10a/k8s-label-rules-webhook?style=plastic)
+[![Buy Me A Coffee](https://img.shields.io/badge/BuyMeACoffee-Donate-ff813f.svg?logo=CoffeeScript&style=plastic)](https://www.buymeacoffee.com/caleblemoine)
 
 ## Table of Contents
 
