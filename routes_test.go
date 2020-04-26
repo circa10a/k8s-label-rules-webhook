@@ -222,7 +222,7 @@ func TestUndefinedRouteRedirect(t *testing.T) {
 	response := e.GET("/notthere").
 		Expect().
 		Status(http.StatusOK)
-	// Ensure proper refirect to swagger docs
+	// Ensure proper redirect to swagger docs
 	response.Body().Contains("swagger-ui")
 }
 
@@ -238,6 +238,6 @@ func TestMetricsEndpoint(t *testing.T) {
 	response := e.GET("/metrics").
 		Expect().
 		Status(http.StatusOK).ContentType("text/plain")
-	// Ensure proper refirect to swagger docs
+	// Ensure proper redirect to swagger docs
 	response.Body().Contains("gin_request_duration_seconds_sum")
 }
