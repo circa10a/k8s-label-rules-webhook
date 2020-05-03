@@ -170,6 +170,7 @@ To have the web server listen on https, you need to supply a certificate and a k
 
 Here's an [example deployment](examples/tls.yaml) which supplies a cert, key and enables TLS in the application.
 
+> Note: The TLS example only works in the `default` namespace. The subject alt name in the certificate is label-rules-webhook-service.default.svc
 > Note: The default https port is `8443`
 
 #### Deploy admission webhook
@@ -184,7 +185,12 @@ metadata:
 webhooks:
 - name: my.application.domain
   clientConfig:
-    url: "https://<deployed-app-location>/"
+    clientConfig:
+    caBundle: <base64 encoded cert bundle>
+    service:
+      namespace: "default"
+      name: "label-rules-webhook-service"
+      port: 8443
   rules:
   - operations:
     - "CREATE"
