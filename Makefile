@@ -46,7 +46,7 @@ docker-build:
 docker-run:
 	docker run --rm -v $(shell pwd)/rules.yaml:/rules.yaml \
     -p 8080:8080 \
-    $(PROJECT) --file rules.yaml --metrics
+    $(PROJECT):$(VERSION) --file rules.yaml --metrics
 
 docker-dev: docker-build docker-run
 
