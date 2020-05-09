@@ -9,20 +9,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// Rules array from yaml
+// Rules is a slice of rules that are loaded from a yaml array
 type rules struct {
 	Rules          []rule `yaml:"rules" json:"rules"`
 	CompiledRegexs map[string]*regexp.Regexp
 }
 
-// Individual rule within rules array
+// Rule is a struct that represents a rule within rules array
 type rule struct {
 	Name  string `yaml:"name" json:"name"`
 	Key   string `yaml:"key" json:"key"`
 	Value value  `yaml:"value" json:"value"`
 }
 
-// Value struct within each rule
+// Value is struct within each rule which only supports regex, but can be expanded
 type value struct {
 	Regex string `yaml:"regex" json:"regex"`
 }
@@ -81,7 +81,7 @@ func (r *rules) validateAllRulesRegex() []ruleError {
 	return r.compileRegex(false)
 }
 
-func (r *rules) ensureLabelsContainRules(labels map[string]interface{}) error {
+func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 	for _, rule := range r.Rules {
 		// Ensure labels contains rule
 		if _, ok := labels[rule.Key]; !ok {
@@ -89,12 +89,6 @@ func (r *rules) ensureLabelsContainRules(labels map[string]interface{}) error {
 			errStr := fmt.Sprintf("%v not in labels", rule.Key)
 			return errors.New(errStr)
 		}
-	}
-	return nil
-}
-
-func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
-	for _, rule := range r.Rules {
 		// Force all values to strings to prevent panic from interface conversion
 		labelVal := fmt.Sprintf("%v", labels[rule.Key])
 		regex, _ := r.CompiledRegexs[rule.Name]
