@@ -1,11 +1,15 @@
 # Changelog
 
+## 0.2.3
+
+Optimize rule checking logic for better performance
+
 ## 0.2.2
- 
+
 Update dependencies
 
 ## 0.2.1
- 
+
 Update dependencies
 
 ## 0.2.0

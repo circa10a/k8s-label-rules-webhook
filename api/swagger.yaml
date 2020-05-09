@@ -81,7 +81,7 @@ info:
     name: MIT
     url: https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE
   title: k8s-label-rules-webhook
-  version: 0.1.0
+  version: 0.2.3
 paths:
   //:
     post:

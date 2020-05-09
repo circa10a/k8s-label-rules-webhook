@@ -4,7 +4,7 @@ GOCLEAN=$(GOCMD) clean
 GORUN=$(GOCMD) run
 PROJECT=circa10a/k8s-label-rules-webhook
 BINARY=webhook
-VERSION=0.2.2
+VERSION=0.2.3
 GOBUILDFLAGS=-ldflags="-s -w -X main.Version=$(VERSION)"
 
 # First target for travis ci
@@ -46,7 +46,7 @@ docker-build:
 docker-run:
 	docker run --rm -v $(shell pwd)/rules.yaml:/rules.yaml \
     -p 8080:8080 \
-    $(PROJECT) --file rules.yaml --metrics
+    $(PROJECT):$(VERSION) --file rules.yaml --metrics
 
 docker-dev: docker-build docker-run
 

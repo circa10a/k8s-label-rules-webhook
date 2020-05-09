@@ -39,14 +39,8 @@ func labelValidationHandler() gin.HandlerFunc {
 		if c.ShouldBindJSON(&k8sData) == nil {
 			labels := k8sData.Request.Object.Metadata.Labels
 			uid := k8sData.Request.Object.Metadata.UID
-			// Ensure labels provided contain keys identified in the ruleset
-			containLabelErr := R.ensureLabelsContainRules(labels)
-			// Reject request if not
-			if containLabelErr != nil {
-				sendResponse(c, k8sData, uid, false, http.StatusForbidden, containLabelErr.Error())
-				return
-			}
-			// Ensure labels provided match regex of keys identified in the ruleset
+			// Ensure labels contain keys identified in the ruleset
+			// Ensure labels are present and user provided regex match values identified in the ruleset
 			matchLabelErr := R.ensureLabelsMatchRules(labels)
 			// Reject request if not
 			if matchLabelErr != nil {

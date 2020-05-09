@@ -167,7 +167,7 @@ func TestEnsureLabelsContainRulesValid(t *testing.T) {
 	}
 	// Simulate labels from k8s request
 	labels := createValidLabels()
-	assert.NoError(t, r.ensureLabelsContainRules(labels))
+	assert.NoError(t, r.ensureLabelsMatchRules(labels))
 }
 
 func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
@@ -182,7 +182,7 @@ func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
 	}
 	// Simulate labels from k8s request
 	labels := createInvalidLabels()
-	assert.Error(t, r.ensureLabelsContainRules(labels))
+	assert.Error(t, r.ensureLabelsMatchRules(labels))
 }
 
 func TestEnsureLabelsMatchRulesValid(t *testing.T) {

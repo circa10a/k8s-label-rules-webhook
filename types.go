@@ -1,6 +1,6 @@
 package main
 
-// Structure of POST request from k8s admission webhook resource
+// k8srequest is the object structure of a received POST request from k8s admission webhook resource
 type k8sRequest struct {
 	APIVersion string
 	Kind       string
@@ -20,7 +20,7 @@ type metadata struct {
 	Labels map[string]interface{}
 }
 
-// Structure of response to tell k8s if the resource is allowed or not
+// webhookResponse is the structure of a response to tell k8s if the resource is allowed or not
 type webhookResponse struct {
 	APIVersion string   `json:"apiVersion"`
 	Kind       string   `json:"kind"`
@@ -38,7 +38,7 @@ type status struct {
 	Message string `json:"message"`
 }
 
-// Structs for other reponses within the API
+// validRulesResponse informs the user if there are any problems by accessing the /validate route
 type validRulesResponse struct {
 	RulesValid bool        `json:"rulesValid"`
 	Errors     []ruleError `json:"errors"`
