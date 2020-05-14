@@ -39,5 +39,5 @@ require (
 	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f // indirect
 	golang.org/x/sys v0.0.0-20200508214444-3aab700007d7 // indirect
 	golang.org/x/tools v0.0.0-20200509030707-2212a7e161a5 // indirect
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v2 v2.3.0
 )
