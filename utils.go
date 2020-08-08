@@ -27,7 +27,7 @@ func errToStr(e error) string {
 	return ""
 }
 
-// Set default value for envirinment variable if not found
+// Set default value for environment variable if not found
 func getEnv(key, def string) string {
 	val := os.Getenv(key)
 	if len(val) == 0 {
