@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.2.4
+
+Upgrade to go 1.15
+
 ## 0.2.3
 
 Optimize rule checking logic for better performance
