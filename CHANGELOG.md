@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.2.5
+
+- Upgrade to go 1.15.3
+- Update dependencies
+
 ### 0.2.4
 
 Upgrade to go 1.15
