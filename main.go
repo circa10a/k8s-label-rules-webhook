@@ -26,10 +26,6 @@ var (
 	TLSKey *string
 	// TLSPort TLS listening port
 	TLSPort *int
-	// SwaggerAPIDocURLFlag Swagger URL Flag
-	SwaggerAPIDocURLFlag *string
-	// SwaggerAPIDocURLStr Swagger URL Flag
-	SwaggerAPIDocURLStr string
 	// R main rules struct to hold current ruleset
 	R rules
 	// Version is used to output the version of the application
@@ -69,7 +65,7 @@ func flags() {
 }
 
 // @title k8s-label-rules-webhook
-// @version 0.2.3
+// @version 0.2.7
 // @description A kubernetes webhook to standardize labels on resources
 
 // @contact.name GitHub
@@ -85,15 +81,24 @@ func main() {
 	// Instantiate map to cache regex compilations in
 	R.CompiledRegexs = make(map[string]*regexp.Regexp)
 	// Load initial rules into memory
-	R.load(*FilePath)
+	err := R.load(*FilePath)
+	if err != nil {
+		log.Error(err)
+	}
 	// Initialize paths and handlers in routes.go
 	routes(G)
 	// Listen via https if TLS enabled
 	if *TLS {
-		G.RunTLS(fmt.Sprintf(":%v", *TLSPort), *TLSCert, *TLSKey)
+		err = G.RunTLS(fmt.Sprintf(":%v", *TLSPort), *TLSCert, *TLSKey)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	// Else listen on http
 	// Defaults to port 8080, can be overridden via PORT env var.
 	// Example: export PORT=3000
-	G.Run()
+	err = G.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

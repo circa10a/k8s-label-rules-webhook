@@ -6,8 +6,10 @@ go:
 services:
   - docker
 
+before_install:
+  - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.32.2
+
 script:
-  - go vet ./...
   - make test
 
 before_deploy: |

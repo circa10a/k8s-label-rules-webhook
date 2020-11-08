@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/gavv/httpexpect"
+	log "github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -16,7 +17,10 @@ func init() {
 	// Init map to store compiled regexs
 	R.CompiledRegexs = make(map[string]*regexp.Regexp)
 	// Load initial rules into memory
-	R.load(*FilePath)
+	err := R.load(*FilePath)
+	if err != nil {
+		log.Error(err)
+	}
 	// load handlers into gin engine
 	routes(G)
 }

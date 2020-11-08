@@ -35,9 +35,6 @@ type ruleError struct {
 func (r *rules) load(path string) error {
 	rulesData, _ := readFile(path)
 	err := yaml.Unmarshal([]byte(rulesData), &r)
-	if err != nil {
-		log.Error(err)
-	}
 	r.compileRegex(true)
 	// Should return nil
 	return err
@@ -91,7 +88,7 @@ func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 		}
 		// Force all values to strings to prevent panic from interface conversion
 		labelVal := fmt.Sprintf("%v", labels[rule.Key])
-		regex, _ := r.CompiledRegexs[rule.Name]
+		regex := r.CompiledRegexs[rule.Name]
 		if !regex.MatchString(labelVal) {
 			errStr := fmt.Sprintf("Value for label '%v' does not match expression '%v'", rule.Key, rule.Value.Regex)
 			return errors.New(errStr)
