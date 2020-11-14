@@ -4,7 +4,7 @@ Enforce standards for labels of resources being created in your k8s cluster
 
 ![image](https://i.imgur.com/yiqw1we.png)
 
-[![Build Status](https://travis-ci.org/circa10a/k8s-label-rules-webhook.svg?branch=master)](https://travis-ci.org/circa10a/k8s-label-rules-webhook)
+![Build Status](https://github.com/circa10a/k8s-label-rules-webhook/workflows/GoReleaser/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/circa10a/k8s-label-rules-webhook)](https://goreportcard.com/report/github.com/circa10a/k8s-label-rules-webhook)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/circa10a/k8s-label-rules-webhook?style=plastic)
 ![Docker Pulls](https://img.shields.io/docker/pulls/circa10a/k8s-label-rules-webhook?style=plastic)
@@ -266,7 +266,7 @@ make test
 
 ## Changelog
 
-[Changelog.md](CHANGELOG.md)
+Automated under [releases](https://github.com/circa10a/k8s-label-rules-webhook/tree/main)
 
 ## Troubleshooting
 

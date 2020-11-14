@@ -1,5 +1,6 @@
 webhook
 .DS_Store
+coverage.txt
 *.[56789ao]
 *.a[56789o]
 *.so
