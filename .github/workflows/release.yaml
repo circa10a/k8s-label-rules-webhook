@@ -13,8 +13,14 @@ jobs:
         uses: actions/checkout@v2
       - name: Unshallow
         run: git fetch --prune --unshallow
-      - name: Set up Go
+      - id: vars
+        run: |
+          echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
+          echo "Using Go version ${{ steps.vars.outputs.go_version }}"
+      - name: Install Go
         uses: actions/setup-go@v2
+        with:
+          go-version: ${{ steps.vars.outputs.go_version }}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
