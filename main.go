@@ -30,7 +30,7 @@ var (
 	R rules
 	// Version is used to output the version of the application
 	Version string
-	// Commit is used to output the version of the application
+	// Commit is used to output the git commit sha from which the app was compiled
 	Commit string
 	// G default gin engine
 	G = gin.Default()
