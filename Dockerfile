@@ -8,7 +8,7 @@ ENV USER=go \
     GOARCH=amd64 \
     CGO_ENABLED=0
 
-RUN go build -ldflags="-s -w -X main.Version=$(grep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}' Makefile)" \
+RUN go build -ldflags="-s -w -X main.Version=$(grep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}' main.go)" \
     -o webhook && \
     addgroup --gid "$GID" "$USER" && \
     adduser \

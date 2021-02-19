@@ -26,6 +26,7 @@ func init() {
 }
 
 func TestRulesEndpoint(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -47,6 +48,7 @@ func TestRulesEndpoint(t *testing.T) {
 }
 
 func TestReloadEndpoint(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -73,6 +75,7 @@ func TestReloadEndpoint(t *testing.T) {
 }
 
 func TestValidateEndpoint(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -89,6 +92,7 @@ func TestValidateEndpoint(t *testing.T) {
 }
 
 func TestRootEndpointNoMatchLabels(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -125,6 +129,7 @@ func TestRootEndpointNoMatchLabels(t *testing.T) {
 }
 
 func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -162,6 +167,7 @@ func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
 }
 
 func TestRootEndpointValidLabels(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -199,6 +205,7 @@ func TestRootEndpointValidLabels(t *testing.T) {
 }
 
 func TestRootEndpointNoPayload(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -215,6 +222,7 @@ func TestRootEndpointNoPayload(t *testing.T) {
 }
 
 func TestUndefinedRouteRedirect(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
@@ -231,6 +239,7 @@ func TestUndefinedRouteRedirect(t *testing.T) {
 }
 
 func TestMetricsEndpoint(t *testing.T) {
+	t.Parallel()
 	// run server using httptest
 	server := httptest.NewServer(G)
 	defer server.Close()
