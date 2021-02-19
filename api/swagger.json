@@ -11,10 +11,10 @@
             "name": "MIT",
             "url": "https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE"
         },
-        "version": "0.2.9"
+        "version": "0.2.10"
     },
     "paths": {
-        "/": {
+        "//": {
             "post": {
                 "description": "Respond to k8s with approval or rejection of labels compared against the ruleset",
                 "produces": [
@@ -120,7 +120,6 @@
                     "type": "boolean"
                 },
                 "status": {
-                    "type": "object",
                     "$ref": "#/definitions/main.status"
                 },
                 "uid": {
@@ -138,7 +137,6 @@
                     "type": "string"
                 },
                 "value": {
-                    "type": "object",
                     "$ref": "#/definitions/main.value"
                 }
             }
@@ -197,7 +195,6 @@
                     "type": "string"
                 },
                 "response": {
-                    "type": "object",
                     "$ref": "#/definitions/main.response"
                 }
             }

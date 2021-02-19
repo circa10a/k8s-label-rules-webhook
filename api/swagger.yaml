@@ -20,7 +20,6 @@ definitions:
         type: boolean
       status:
         $ref: '#/definitions/main.status'
-        type: object
       uid:
         type: string
     type: object
@@ -32,7 +31,6 @@ definitions:
         type: string
       value:
         $ref: '#/definitions/main.value'
-        type: object
     type: object
   main.ruleError:
     properties:
@@ -70,7 +68,6 @@ definitions:
         type: string
       response:
         $ref: '#/definitions/main.response'
-        type: object
     type: object
 info:
   contact:
@@ -81,12 +78,11 @@ info:
     name: MIT
     url: https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE
   title: k8s-label-rules-webhook
-  version: 0.2.3
+  version: 0.2.10
 paths:
   //:
     post:
-      description: Respond to k8s with approval or rejection of labels compared against
-        the ruleset
+      description: Respond to k8s with approval or rejection of labels compared against the ruleset
       produces:
       - application/json
       responses:
@@ -94,8 +90,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/main.webhookResponse'
-      summary: Respond to k8s with approval or rejection of labels compared against
-        the ruleset
+      summary: Respond to k8s with approval or rejection of labels compared against the ruleset
   /reload:
     post:
       description: Hot reload ruleset file into memory without downtime
