@@ -63,8 +63,8 @@ Once you have your ruleset, you can deploy the webhook several different ways.
 
 ```shell
 docker run -d --name k8s-label-rules-webhook \
-  -p 8080: 8080 \
-  -v rules.yaml:/rules.yaml \
+  -p 8080:8080 \
+  -v $PWD/rules.yaml:/rules.yaml \
   circa10a/k8s-label-rules-webhook
 ```
 

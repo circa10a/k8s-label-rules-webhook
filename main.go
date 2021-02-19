@@ -30,6 +30,8 @@ var (
 	R rules
 	// Version is used to output the version of the application
 	Version string
+	// Commit is used to output the version of the application
+	Commit string
 	// G default gin engine
 	G = gin.Default()
 )
@@ -75,7 +77,7 @@ func flags() {
 // @license.url https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE
 func main() {
 	// Output version of application
-	log.Infof("Version: %v", Version)
+	log.Infof("Version: %v Commit: %v", Version, Commit)
 	// Validate command line arguments
 	flags()
 	// Instantiate map to cache regex compilations in
