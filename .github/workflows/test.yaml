@@ -21,7 +21,12 @@ jobs:
         env:
           GIN_MODE: release
           METRICS: true
-        run: go test -coverprofile=coverage.txt ./... | sed '/ERRO/d; /level=error/d; /printer.go/d'
+        run: |
+          go test -coverprofile=coverage.txt ./... | sed '/ERRO/d; /level=error/d; /printer.go/d'
+          if ! [ $(grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+" api/swagger.json) = $(grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+" main.go ) ]; then
+            echo "Update version in main.go and run make docs before committing"
+            exit 1
+          fi
   golangci-lint:
     runs-on: ubuntu-latest
     steps:
@@ -29,4 +34,4 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.33
+          version: v1.37
