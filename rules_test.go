@@ -59,6 +59,7 @@ func createInvalidRulesFile(t *testing.T, path string) {
 }
 
 func TestLoadValid(t *testing.T) {
+	t.Parallel()
 	// Load valid yaml
 	// New struct
 	r := &rules{}
@@ -70,6 +71,7 @@ func TestLoadValid(t *testing.T) {
 }
 
 func TestLoadInvalid(t *testing.T) {
+	t.Parallel()
 	// Load invalid yaml
 	// New struct
 	r := &rules{}
@@ -85,6 +87,7 @@ func TestLoadInvalid(t *testing.T) {
 }
 
 func TestDefaultCompiledRegex(t *testing.T) {
+	t.Parallel()
 	_, err := defaultCompiledRegex()
 	if err != nil {
 		t.Error("Failed compiling default regex")
@@ -92,6 +95,7 @@ func TestDefaultCompiledRegex(t *testing.T) {
 }
 
 func TestCompileRegexValid(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
@@ -106,6 +110,7 @@ func TestCompileRegexValid(t *testing.T) {
 }
 
 func TestCompileRegexValidStore(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
@@ -124,6 +129,7 @@ func TestCompileRegexValidStore(t *testing.T) {
 }
 
 func TestCompileRegexInvalid(t *testing.T) {
+	t.Parallel()
 	invalidRulesFile := "test.yaml"
 	// Create invalid yaml file
 	createInvalidRulesFile(t, invalidRulesFile)
@@ -142,6 +148,7 @@ func TestCompileRegexInvalid(t *testing.T) {
 }
 
 func TestValidateAllRulesRegex(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
@@ -156,6 +163,7 @@ func TestValidateAllRulesRegex(t *testing.T) {
 }
 
 func TestEnsureLabelsContainRulesValid(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
@@ -171,6 +179,7 @@ func TestEnsureLabelsContainRulesValid(t *testing.T) {
 }
 
 func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
@@ -186,6 +195,7 @@ func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
 }
 
 func TestEnsureLabelsMatchRulesValid(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
@@ -201,6 +211,7 @@ func TestEnsureLabelsMatchRulesValid(t *testing.T) {
 }
 
 func TestEnsureLabelsMatchRulesInvalid(t *testing.T) {
+	t.Parallel()
 	// New struct
 	r := &rules{}
 	// Init map
