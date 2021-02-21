@@ -60,3 +60,6 @@ docker-release: docker-build
 docker-release: docs
 	echo "${DOCKER_PASSWORD}" | docker login -u ${USERNAME} --password-stdin
 	docker push $(PROJECT):$(VERSION)
+
+lint:
+	golangci-lint run -v

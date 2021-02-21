@@ -31,7 +31,7 @@ func createInvalidYamlFile(t *testing.T, path string) {
 	- name:`
 	invalidYamlFile := []byte(invalidYaml)
 	// Break test if error writing file
-	fileErr := ioutil.WriteFile(path, invalidYamlFile, 0644)
+	fileErr := ioutil.WriteFile(path, invalidYamlFile, 0600)
 	if fileErr != nil {
 		t.Error("Error writing test yaml file")
 	}
@@ -52,7 +52,7 @@ func createInvalidRulesFile(t *testing.T, path string) {
 	}
 	data, _ := yaml.Marshal(invalidRules)
 	// Break test if error writing file
-	fileErr := ioutil.WriteFile(path, data, 0644)
+	fileErr := ioutil.WriteFile(path, data, 0600)
 	if fileErr != nil {
 		t.Error("Error writing test yaml file")
 	}
@@ -84,14 +84,6 @@ func TestLoadInvalid(t *testing.T) {
 	defer os.Remove(invalidYamlFile)
 	// Ensure error due to invalid yaml
 	assert.Error(t, r.load(invalidYamlFile))
-}
-
-func TestDefaultCompiledRegex(t *testing.T) {
-	t.Parallel()
-	_, err := defaultCompiledRegex()
-	if err != nil {
-		t.Error("Failed compiling default regex")
-	}
 }
 
 func TestCompileRegexValid(t *testing.T) {

@@ -23,7 +23,7 @@ func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bo
 			},
 		},
 	}
-	c.JSON(200, &r)
+	c.JSON(http.StatusOK, &r)
 }
 
 // K8s webhook context godoc

@@ -34,16 +34,10 @@ type ruleError struct {
 
 func (r *rules) load(path string) error {
 	rulesData, _ := readFile(path)
-	err := yaml.Unmarshal([]byte(rulesData), &r)
+	err := yaml.Unmarshal(rulesData, &r)
 	r.compileRegex(true)
 	// Should return nil
 	return err
-}
-
-// In case of invalid regex provided
-func defaultCompiledRegex() (*regexp.Regexp, error) {
-	wildcard, err := regexp.Compile(".*")
-	return wildcard, err
 }
 
 // Insert into map to prevent recompiling for every call
@@ -55,14 +49,12 @@ func (r *rules) compileRegex(storeInMap bool) []ruleError {
 			log.Errorf("rule: %v, err: %v", rule.Name, err.Error())
 			errArr = append(errArr, ruleError{RuleName: rule.Name, Err: err.Error()})
 			// In the event of invalid regex, anything for that rule is allowed
-			defaultRegex, _ := defaultCompiledRegex()
+			defaultRegex := regexp.MustCompile(".*")
 			r.CompiledRegexs[rule.Name] = defaultRegex
-		} else {
 			// Store user supplied compiled regex if no error
-			if storeInMap {
-				// Update/Store in map
-				r.CompiledRegexs[rule.Name] = compiled
-			}
+		} else if storeInMap {
+			// Update/Store in map
+			r.CompiledRegexs[rule.Name] = compiled
 		}
 	}
 	// If any regex compilation errors detected, return

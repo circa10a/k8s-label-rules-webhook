@@ -125,9 +125,11 @@ func TestRootEndpointNoMatchLabels(t *testing.T) {
 	response.Object().Value("response").Object().ValueEqual("allowed", false)
 	response.Object().Value("response").Object().ValueEqual("uid", "123")
 	response.Object().Value("response").Object().Value("status").Object().ValueEqual("code", 403)
+	//nolint
 	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "phone-number not in labels")
 }
 
+//nolint
 func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
@@ -166,6 +168,7 @@ func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
 	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "Value for label 'phone-number' does not match expression '[0-9]{3}-[0-9]{3}-[0-9]{4}'")
 }
 
+//nolint
 func TestRootEndpointValidLabels(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
