@@ -17,6 +17,7 @@ func TestReadFile(t *testing.T) {
 func TestStr2Bool(t *testing.T) {
 	t.Parallel()
 	assert.True(t, str2bool("test"), "Converts nonempty string to true")
+	assert.False(t, str2bool("false"), "Converts false string to false")
 	assert.False(t, str2bool(""), "Converts empty string to false")
 }
 
