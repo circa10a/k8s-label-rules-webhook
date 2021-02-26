@@ -3,6 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"os"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -16,6 +17,9 @@ func readFile(path string) ([]byte, error) {
 }
 
 func str2bool(s string) bool {
+	if b, err := strconv.ParseBool(s); err == nil {
+		return b
+	}
 	return s != ""
 }
 
