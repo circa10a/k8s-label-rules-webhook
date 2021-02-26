@@ -19,6 +19,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         RELEASE_BRANCHES: main
+        DEFAULT_BUMP: patch
   docker:
     runs-on: ubuntu-latest
     needs: semver
