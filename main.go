@@ -13,6 +13,8 @@ import (
 const (
 	// Default filename
 	defaultRulesFile string = "rules.yaml"
+	// Default TLS port
+	defaultTLSPort int = 8443
 )
 
 var (
@@ -47,7 +49,7 @@ func flags() {
 	// --tls-key arg
 	TLSKey = flag.String("tls-key", os.Getenv("TLS_KEY"), "Path to TLS key")
 	// --tls-port arg
-	TLSPort = flag.Int("tls-port", 8443, "TLS listening port")
+	TLSPort = flag.Int("tls-port", defaultTLSPort, "TLS listening port")
 
 	flag.Parse()
 	// Input file validation
@@ -65,7 +67,7 @@ func flags() {
 }
 
 // @title k8s-label-rules-webhook
-// @version 0.2.13
+// @version 0.2.14
 // @description A kubernetes webhook to standardize labels on resources
 
 // @contact.name GitHub
