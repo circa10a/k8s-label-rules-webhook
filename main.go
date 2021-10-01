@@ -67,7 +67,7 @@ func flags() {
 }
 
 // @title k8s-label-rules-webhook
-// @version 0.2.14
+// @version 0.2.15
 // @description A kubernetes webhook to standardize labels on resources
 
 // @contact.name GitHub
