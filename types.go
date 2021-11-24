@@ -2,9 +2,9 @@ package main
 
 // k8srequest is the object structure of a received POST request from k8s admission webhook resource
 type k8sRequest struct {
+	Request    request
 	APIVersion string
 	Kind       string
-	Request    request
 }
 
 type request struct {
@@ -16,8 +16,8 @@ type object struct {
 }
 
 type metadata struct {
-	UID    string
 	Labels map[string]interface{}
+	UID    string
 }
 
 // webhookResponse is the structure of a response to tell k8s if the resource is allowed or not
@@ -29,24 +29,24 @@ type webhookResponse struct {
 
 type response struct {
 	UID     string `json:"uid"`
-	Allowed bool   `json:"allowed"`
 	Status  status `json:"status"`
+	Allowed bool   `json:"allowed"`
 }
 
 type status struct {
-	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Code    int    `json:"code"`
 }
 
 // validRulesResponse informs the user if there are any problems by accessing the /validate route
 type validRulesResponse struct {
-	RulesValid bool        `json:"rulesValid"`
 	Errors     []ruleError `json:"errors"`
+	RulesValid bool        `json:"rulesValid"`
 }
 
 type reloadRulesResponse struct {
-	Reloaded   bool        `json:"reloaded"`
+	NewRuleSet *[]rule     `json:"newRules"`
 	YamlErr    string      `json:"yamlErr"`
 	RuleErrs   []ruleError `json:"ruleErr"`
-	NewRuleSet *[]rule     `json:"newRules"`
+	Reloaded   bool        `json:"reloaded"`
 }

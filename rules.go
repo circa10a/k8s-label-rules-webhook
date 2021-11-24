@@ -11,8 +11,8 @@ import (
 
 // Rules is a slice of rules that are loaded from a yaml array
 type rules struct {
-	Rules          []rule `yaml:"rules" json:"rules"`
 	CompiledRegexs map[string]*regexp.Regexp
+	Rules          []rule `yaml:"rules" json:"rules"`
 }
 
 // Rule is a struct that represents a rule within rules array

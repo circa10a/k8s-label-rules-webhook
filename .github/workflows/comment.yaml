@@ -1,0 +1,11 @@
+name: comment
+on:
+  pull_request:
+    types: [opened]
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: circa10a/animal-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

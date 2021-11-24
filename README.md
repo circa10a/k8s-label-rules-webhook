@@ -77,7 +77,7 @@ COPY rules.yaml /
 
 ### Kubernetes
 
-####  Deploy webhook application
+#### Deploy webhook application
 
 > Kubernetes admission webhooks require https
 
