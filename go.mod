@@ -28,11 +28,10 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.8.1
-	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.3.3
-	github.com/swaggo/swag v1.7.4
+	github.com/swaggo/swag v1.7.6
 	github.com/ugorji/go v1.2.6 // indirect
 	github.com/valyala/fasthttp v1.7.0 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
