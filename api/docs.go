@@ -24,7 +24,7 @@ var doc = `{
         },
         "license": {
             "name": "MIT",
-            "url": "https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE"
+            "url": "https://github.com/circa10a/k8s-label-rules-webhook/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },
@@ -230,7 +230,7 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "0.2.16",
+	Version:     "",
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},

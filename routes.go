@@ -9,23 +9,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// Generate response to return to k8s
-func sendResponse(c *gin.Context, k8sRequest *k8sRequest, uid string, allowed bool, code int, message string) {
-	r := &webhookResponse{
-		APIVersion: k8sRequest.APIVersion,
-		Kind:       k8sRequest.Kind,
-		Response: response{
-			UID:     uid,
-			Allowed: allowed,
-			Status: status{
-				Code:    code,
-				Message: message,
-			},
-		},
-	}
-	c.JSON(http.StatusOK, &r)
-}
-
 // K8s webhook context godoc
 // @Summary Respond to k8s with approval or rejection of labels compared against the ruleset
 // @Description Respond to k8s with approval or rejection of labels compared against the ruleset
@@ -44,11 +27,32 @@ func labelValidationHandler() gin.HandlerFunc {
 			matchLabelErr := R.ensureLabelsMatchRules(labels)
 			// Reject request if not
 			if matchLabelErr != nil {
-				sendResponse(c, k8sData, uid, false, http.StatusForbidden, matchLabelErr.Error())
+				c.JSON(http.StatusOK, &webhookResponse{
+					APIVersion: k8sData.APIVersion,
+					Kind:       k8sData.Kind,
+					Response: response{
+						UID:     uid,
+						Allowed: false,
+						Status: status{
+							Code:    http.StatusForbidden,
+							Message: matchLabelErr.Error(),
+						},
+					},
+				})
 				return
 			}
-			// All constraints passed
-			sendResponse(c, k8sData, uid, true, http.StatusOK, "Labels conform to ruleset")
+			c.JSON(http.StatusOK, &webhookResponse{
+				APIVersion: k8sData.APIVersion,
+				Kind:       k8sData.Kind,
+				Response: response{
+					UID:     uid,
+					Allowed: true,
+					Status: status{
+						Code:    http.StatusOK,
+						Message: "Labels conform to ruleset",
+					},
+				},
+			})
 			return
 		}
 		// In the event, nothing to bind to

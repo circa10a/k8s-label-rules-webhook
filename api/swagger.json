@@ -9,9 +9,8 @@
         },
         "license": {
             "name": "MIT",
-            "url": "https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE"
-        },
-        "version": "0.2.16"
+            "url": "https://github.com/circa10a/k8s-label-rules-webhook/blob/main/LICENSE"
+        }
     },
     "paths": {
         "//": {

@@ -76,9 +76,8 @@ info:
   description: A kubernetes webhook to standardize labels on resources
   license:
     name: MIT
-    url: https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE
+    url: https://github.com/circa10a/k8s-label-rules-webhook/blob/main/LICENSE
   title: k8s-label-rules-webhook
-  version: 0.2.16
 paths:
   //:
     post:

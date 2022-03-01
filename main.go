@@ -67,14 +67,13 @@ func flags() {
 }
 
 // @title k8s-label-rules-webhook
-// @version 0.2.16
 // @description A kubernetes webhook to standardize labels on resources
 
 // @contact.name GitHub
 // @contact.url https://github.com/circa10a/k8s-label-rules-webhook/
 
 // @license.name MIT
-// @license.url https://github.com/circa10a/k8s-label-rules-webhook/blob/master/LICENSE
+// @license.url https://github.com/circa10a/k8s-label-rules-webhook/blob/main/LICENSE
 func main() {
 	// Output version of application
 	log.Infof("Version: %v", Version)
