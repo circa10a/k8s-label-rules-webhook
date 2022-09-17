@@ -233,14 +233,14 @@ Prometheus metrics are enabled by default and are available at the `/metrics` en
 |             |                                                                       |                      |                        |           |               |
 |-------------|-----------------------------------------------------------------------|----------------------|------------------------|-----------|---------------|
 | Name        | Description                                                           | Environment Variable | Command Line Argument  | Required | Default        |
-| GIN MODE    | Runs web server in production or debug mode                           | `GIN_MODE`           | NONE                   | `false`  | `release`      |
-| PORT        | Port for web server to listen on                                      | `PORT`               | NONE                   | `false`  | `8080`         |
-| METRICS     | Enables prometheus metrics on `/metrics`(unset for false)             | `METRICS`            | `--metrics`            | `false`  | `true`         |
-| RULES       | File containing user defined ruleset(default looks to `./rules.yaml`) | NONE                 | `--file`               | `true`   | `./rules.yaml` |
+| Gin mode    | Runs web server in production or debug mode                           | `GIN_MODE`           | None                   | `false`  | `release`      |
+| Port        | Port for web server to listen on                                      | `PORT`               | None                   | `false`  | `8080`         |
+| Metrics     | Enables prometheus metrics on `/metrics`(unset for false)             | `METRICS`            | `--metrics`            | `false`  | `true`         |
+| Rules       | File containing user defined ruleset(default looks to `./rules.yaml`) | None                 | `--file`               | `true`   | `./rules.yaml` |
 | TLS         | Start web server listening on HTTPS                                   | `TLS_ENABLED`        | `--tls`                | `false`  | `false`        |
-| TLS CERT    | TLS Certificate file path                                             | `TLS_CERT`           | `--tls-cert`           | `false`  | None           |
-| TLS KEY     | TLS key file path                                                     | `TLS_KEY`            | `--tls-key`            | `false ` | None           |
-| TLS PORT    | TLS listening port                                                    | None                 | `--tls-port`           | `false`  | `8443`         |
+| TLS Cert    | TLS Certificate file path                                             | `TLS_CERT`           | `--tls-cert`           | `false`  | None           |
+| TLS Key     | TLS key file path                                                     | `TLS_KEY`            | `--tls-key`            | `false`  | None           |
+| TLS Port    | TLS listening port                                                    | None                 | `--tls-port`           | `false`  | `8443`         |
 
 ## Development
 

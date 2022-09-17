@@ -24,7 +24,7 @@ func labelValidationHandler() gin.HandlerFunc {
 			uid := k8sData.Request.Object.Metadata.UID
 			// Ensure labels contain keys identified in the ruleset
 			// Ensure labels are present and user provided regex match values identified in the ruleset
-			matchLabelErr := R.ensureLabelsMatchRules(labels)
+			matchLabelErr := r.ensureLabelsMatchRules(labels)
 			// Reject request if not
 			if matchLabelErr != nil {
 				c.JSON(http.StatusOK, &webhookResponse{
@@ -72,14 +72,14 @@ func labelValidationHandler() gin.HandlerFunc {
 func reloadRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		// Load file back into mem
-		yamlErr := R.load(*FilePath)
+		yamlErr := r.load(*filePath)
 		// First check ruleset is valid
-		ruleErrs := R.validateAllRulesRegex()
+		ruleErrs := r.validateAllRulesRegex()
 		reloadRulesResponse := &reloadRulesResponse{
 			Reloaded:   true,
 			YamlErr:    errToStr(yamlErr),
 			RuleErrs:   ruleErrs,
-			NewRuleSet: &R.Rules,
+			NewRuleSet: &r.Rules,
 		}
 		c.JSON(http.StatusOK, &reloadRulesResponse)
 	}
@@ -94,7 +94,7 @@ func reloadRulesHandler() gin.HandlerFunc {
 // @Router /rules [get]
 func getRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
-		c.JSON(http.StatusOK, &R.Rules)
+		c.JSON(http.StatusOK, &r.Rules)
 	}
 	return gin.HandlerFunc(fn)
 }
@@ -108,7 +108,7 @@ func getRulesHandler() gin.HandlerFunc {
 func validateRulesHandler() gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		var rulesValid bool
-		err := R.validateAllRulesRegex()
+		err := r.validateAllRulesRegex()
 		if err != nil {
 			rulesValid = false
 		} else {

@@ -13,22 +13,22 @@ import (
 func init() {
 	// set defaults to global pointers for config
 	rulesFile := "rules.yaml"
-	FilePath = &rulesFile
+	filePath = &rulesFile
 	// Init map to store compiled regexs
-	R.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load initial rules into memory
-	err := R.load(*FilePath)
+	err := r.load(*filePath)
 	if err != nil {
 		log.Error(err)
 	}
 	// load handlers into gin engine
-	routes(G)
+	routes(g)
 }
 
 func TestRulesEndpoint(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -38,19 +38,19 @@ func TestRulesEndpoint(t *testing.T) {
 		Expect().
 		Status(http.StatusOK).JSON().Array()
 	// Ensure correct count of rules
-	response.Length().Equal(len(R.Rules))
+	response.Length().Equal(len(r.Rules))
 	// Ensure no data is malformed from yaml to response
 	for i := range response.Iter() {
-		response.Element(i).Object().ValueEqual("name", R.Rules[i].Name)
-		response.Element(i).Object().ValueEqual("key", R.Rules[i].Key)
-		response.Element(i).Object().Value("value").Object().ValueEqual("regex", R.Rules[i].Value.Regex)
+		response.Element(i).Object().ValueEqual("name", r.Rules[i].Name)
+		response.Element(i).Object().ValueEqual("key", r.Rules[i].Key)
+		response.Element(i).Object().Value("value").Object().ValueEqual("regex", r.Rules[i].Value.Regex)
 	}
 }
 
 func TestReloadEndpoint(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -65,19 +65,19 @@ func TestReloadEndpoint(t *testing.T) {
 	response.Object().ValueEqual("ruleErr", nil)
 	newRulesResponse := response.Object().Value("newRules").Array()
 	// Ensure correct count of rules
-	newRulesResponse.Length().Equal(len(R.Rules))
+	newRulesResponse.Length().Equal(len(r.Rules))
 	// Ensure no data is malformed from yaml to response
 	for i := range newRulesResponse.Iter() {
-		newRulesResponse.Element(i).Object().ValueEqual("name", R.Rules[i].Name)
-		newRulesResponse.Element(i).Object().ValueEqual("key", R.Rules[i].Key)
-		newRulesResponse.Element(i).Object().Value("value").Object().ValueEqual("regex", R.Rules[i].Value.Regex)
+		newRulesResponse.Element(i).Object().ValueEqual("name", r.Rules[i].Name)
+		newRulesResponse.Element(i).Object().ValueEqual("key", r.Rules[i].Key)
+		newRulesResponse.Element(i).Object().Value("value").Object().ValueEqual("regex", r.Rules[i].Value.Regex)
 	}
 }
 
 func TestValidateEndpoint(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -94,7 +94,7 @@ func TestValidateEndpoint(t *testing.T) {
 func TestRootEndpointNoMatchLabels(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -129,11 +129,11 @@ func TestRootEndpointNoMatchLabels(t *testing.T) {
 	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "phone-number not in labels")
 }
 
-//nolint
+// nolint
 func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -168,11 +168,11 @@ func TestRootEndpointLabelsInvalidRegex(t *testing.T) {
 	response.Object().Value("response").Object().Value("status").Object().ValueEqual("message", "Value for label 'phone-number' does not match expression '[0-9]{3}-[0-9]{3}-[0-9]{4}'")
 }
 
-//nolint
+// nolint
 func TestRootEndpointValidLabels(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -210,7 +210,7 @@ func TestRootEndpointValidLabels(t *testing.T) {
 func TestRootEndpointNoPayload(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -227,7 +227,7 @@ func TestRootEndpointNoPayload(t *testing.T) {
 func TestUndefinedRouteRedirect(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance
@@ -244,7 +244,7 @@ func TestUndefinedRouteRedirect(t *testing.T) {
 func TestMetricsEndpoint(t *testing.T) {
 	t.Parallel()
 	// run server using httptest
-	server := httptest.NewServer(G)
+	server := httptest.NewServer(g)
 	defer server.Close()
 
 	// create httpexpect instance

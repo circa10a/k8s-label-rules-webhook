@@ -9,9 +9,14 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var (
+	// In the event of invalid regex, anything for that rule is allowed
+	defaultRegex = regexp.MustCompile(".*")
+)
+
 // Rules is a slice of rules that are loaded from a yaml array
 type rules struct {
-	CompiledRegexs map[string]*regexp.Regexp
+	compiledRegexs map[string]*regexp.Regexp
 	Rules          []rule `yaml:"rules" json:"rules"`
 }
 
@@ -33,35 +38,44 @@ type ruleError struct {
 }
 
 func (r *rules) load(path string) error {
-	rulesData, _ := readFile(path)
-	err := yaml.Unmarshal(rulesData, &r)
-	r.compileRegex(true)
-	// Should return nil
-	return err
+	rulesData, err := readFile(path)
+	if err != nil {
+		return err
+	}
+
+	err = yaml.Unmarshal(rulesData, &r)
+	if err != nil {
+		return err
+	}
+
+	_ = r.compileRegex(true)
+
+	return nil
 }
 
 // Insert into map to prevent recompiling for every call
 func (r *rules) compileRegex(storeInMap bool) []ruleError {
 	var errArr []ruleError
+
 	for _, rule := range r.Rules {
 		compiled, err := regexp.Compile(rule.Value.Regex)
 		if err != nil {
-			log.Errorf("rule: %v, err: %v", rule.Name, err.Error())
+			log.Errorf("rule: %s, err: %s", rule.Name, err.Error())
 			errArr = append(errArr, ruleError{RuleName: rule.Name, Err: err.Error()})
 			// In the event of invalid regex, anything for that rule is allowed
-			defaultRegex := regexp.MustCompile(".*")
-			r.CompiledRegexs[rule.Name] = defaultRegex
+			r.compiledRegexs[rule.Name] = defaultRegex
 			// Store user supplied compiled regex if no error
 		} else if storeInMap {
 			// Update/Store in map
-			r.CompiledRegexs[rule.Name] = compiled
+			r.compiledRegexs[rule.Name] = compiled
 		}
 	}
+
 	// If any regex compilation errors detected, return
 	if len(errArr) > 0 {
 		return errArr
 	}
-	// No errors
+
 	return nil
 }
 
@@ -75,16 +89,19 @@ func (r *rules) ensureLabelsMatchRules(labels map[string]interface{}) error {
 		// Ensure labels contains rule
 		if _, ok := labels[rule.Key]; !ok {
 			// If rule is not found, reject
-			errStr := fmt.Sprintf("%v not in labels", rule.Key)
+			errStr := fmt.Sprintf("%s not in labels", rule.Key)
 			return errors.New(errStr)
 		}
+
 		// Force all values to strings to prevent panic from interface conversion
-		labelVal := fmt.Sprintf("%v", labels[rule.Key])
-		regex := r.CompiledRegexs[rule.Name]
+		labelVal := fmt.Sprintf("%s", labels[rule.Key])
+		regex := r.compiledRegexs[rule.Name]
+
 		if !regex.MatchString(labelVal) {
-			errStr := fmt.Sprintf("Value for label '%v' does not match expression '%v'", rule.Key, rule.Value.Regex)
+			errStr := fmt.Sprintf("Value for label '%s' does not match expression '%s'", rule.Key, rule.Value.Regex)
 			return errors.New(errStr)
 		}
 	}
+
 	return nil
 }

@@ -64,7 +64,7 @@ func TestLoadValid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	assert.NoError(t, err)
@@ -76,7 +76,7 @@ func TestLoadInvalid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Create invalid yaml file
 	invalidYamlFile := "test.yaml"
 	createInvalidYamlFile(t, invalidYamlFile)
@@ -91,7 +91,7 @@ func TestCompileRegexValid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {
@@ -106,7 +106,7 @@ func TestCompileRegexValidStore(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {
@@ -114,8 +114,8 @@ func TestCompileRegexValidStore(t *testing.T) {
 	}
 	// Store in map
 	r.compileRegex(true)
-	_, phoneKeyPresent := r.CompiledRegexs["require-phone-number"]
-	_, numberKeyPresent := r.CompiledRegexs["require-number"]
+	_, phoneKeyPresent := r.compiledRegexs["require-phone-number"]
+	_, numberKeyPresent := r.compiledRegexs["require-number"]
 	assert.True(t, phoneKeyPresent)
 	assert.True(t, numberKeyPresent)
 }
@@ -130,7 +130,7 @@ func TestCompileRegexInvalid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	err := r.load(invalidRulesFile)
 	if err != nil {
 		t.Error("Error loading yaml")
@@ -144,7 +144,7 @@ func TestValidateAllRulesRegex(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {
@@ -159,7 +159,7 @@ func TestEnsureLabelsContainRulesValid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {
@@ -175,7 +175,7 @@ func TestEnsureLabelsContainRulesInvalid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {
@@ -191,7 +191,7 @@ func TestEnsureLabelsMatchRulesValid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {
@@ -207,7 +207,7 @@ func TestEnsureLabelsMatchRulesInvalid(t *testing.T) {
 	// New struct
 	r := &rules{}
 	// Init map
-	r.CompiledRegexs = make(map[string]*regexp.Regexp)
+	r.compiledRegexs = make(map[string]*regexp.Regexp)
 	// Load valid yaml
 	err := r.load("rules.yaml")
 	if err != nil {

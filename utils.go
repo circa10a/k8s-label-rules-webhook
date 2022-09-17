@@ -4,15 +4,10 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
-
-	log "github.com/sirupsen/logrus"
 )
 
 func readFile(path string) ([]byte, error) {
 	data, fileErr := ioutil.ReadFile(path)
-	if fileErr != nil {
-		log.Fatal(fileErr)
-	}
 	return data, fileErr
 }
 
