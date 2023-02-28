@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"sync"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -18,6 +19,7 @@ var (
 type rules struct {
 	compiledRegexs map[string]*regexp.Regexp
 	Rules          []rule `yaml:"rules" json:"rules"`
+	mu             sync.Mutex
 }
 
 // Rule is a struct that represents a rule within rules array
@@ -38,6 +40,9 @@ type ruleError struct {
 }
 
 func (r *rules) load(path string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
 	rulesData, err := readFile(path)
 	if err != nil {
 		return err
@@ -55,7 +60,7 @@ func (r *rules) load(path string) error {
 
 // Insert into map to prevent recompiling for every call
 func (r *rules) compileRegex(storeInMap bool) []ruleError {
-	var errArr []ruleError
+	errArr := []ruleError{}
 
 	for _, rule := range r.Rules {
 		compiled, err := regexp.Compile(rule.Value.Regex)

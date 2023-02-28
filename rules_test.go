@@ -39,7 +39,7 @@ func createInvalidYamlFile(t *testing.T, path string) {
 
 func createInvalidRulesFile(t *testing.T, path string) {
 	// Create invalid yaml file
-	invalidRules := rules{
+	invalidRules := &rules{
 		Rules: []rule{
 			{
 				Name: "require-phone-number",

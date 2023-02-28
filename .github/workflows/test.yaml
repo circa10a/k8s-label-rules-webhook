@@ -7,14 +7,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - id: vars
-        run: |
-          echo ::set-output name=go_version::$(curl -s https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep -oE '"version": "[0-9]{1}.[0-9]{1,}(.[0-9]{1,})?"' | head -1 | cut -d':' -f2 | sed 's/ //g; s/"//g')
-          echo "Using Go version ${{ steps.vars.outputs.go_version }}"
       - name: Install Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ steps.vars.outputs.go_version }}
+        uses: actions/setup-go@v3
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Test
@@ -30,6 +24,6 @@ jobs:
   golangci-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+        uses: golangci/golangci-lint-action@v3
